@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Plane, BarChart3, Search, PieChart, Star, ArrowRight, Twitter, Github, Linkedin, MapPin, Calendar, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const features = [
@@ -28,17 +29,18 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-background font-body">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
         <div className="container mx-auto flex items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg gradient-hero">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
               <Plane className="h-5 w-5 text-primary-foreground" />
             </div>
             <span className="text-xl font-bold font-heading text-foreground">Holiday Tasker</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Features</a>
-            <a href="#testimonials" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Testimonials</a>
+            <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Features</a>
+            <a href="#testimonials" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Testimonials</a>
+            <ThemeToggle />
             <Link to="/dashboard">
               <Button size="sm" variant="outline" className="mr-2">Log In</Button>
             </Link>
@@ -54,6 +56,68 @@ const LandingPage = () => {
         <div className="absolute inset-0 opacity-20">
           <img src={heroBg} alt="" className="h-full w-full object-cover" />
         </div>
+        
+        {/* Floating decorative elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 0.6, y: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="absolute top-20 left-10 md:left-20 w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-primary/20 backdrop-blur-sm flex items-center justify-center animate-float"
+          >
+            <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 0.6, y: 0 }}
+            transition={{ duration: 1, delay: 0.7 }}
+            className="absolute top-32 right-10 md:right-24 w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-secondary/20 backdrop-blur-sm flex items-center justify-center animate-float"
+            style={{ animationDelay: '1s' }}
+          >
+            <Plane className="w-8 h-8 md:w-10 md:h-10 text-secondary" />
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 0.6, x: 0 }}
+            transition={{ duration: 1, delay: 0.9 }}
+            className="absolute bottom-32 left-16 md:left-32 w-14 h-14 md:w-16 md:h-16 rounded-xl bg-accent/20 backdrop-blur-sm flex items-center justify-center animate-float"
+            style={{ animationDelay: '2s' }}
+          >
+            <Calendar className="w-7 h-7 md:w-8 md:h-8 text-accent" />
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 0.6, x: 0 }}
+            transition={{ duration: 1, delay: 1.1 }}
+            className="absolute bottom-40 right-20 md:right-40 w-14 h-14 md:w-16 md:h-16 rounded-xl bg-primary/20 backdrop-blur-sm flex items-center justify-center animate-float"
+            style={{ animationDelay: '1.5s' }}
+          >
+            <BarChart3 className="w-7 h-7 md:w-8 md:h-8 text-primary" />
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 0.5, scale: 1 }}
+            transition={{ duration: 1, delay: 1.3 }}
+            className="absolute top-1/2 left-1/4 w-12 h-12 rounded-full bg-secondary/20 backdrop-blur-sm flex items-center justify-center animate-pulse-soft"
+          >
+            <MapPin className="w-6 h-6 text-secondary" />
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 0.5, scale: 1 }}
+            transition={{ duration: 1, delay: 1.5 }}
+            className="absolute top-1/3 right-1/3 w-12 h-12 rounded-full bg-accent/20 backdrop-blur-sm flex items-center justify-center animate-pulse-soft"
+            style={{ animationDelay: '1s' }}
+          >
+            <DollarSign className="w-6 h-6 text-accent" />
+          </motion.div>
+        </div>
+
         <div className="container mx-auto px-6 relative z-10">
           <motion.div className="max-w-3xl mx-auto text-center" initial="hidden" animate="visible">
             <motion.h1 variants={fadeUp} custom={0} className="text-4xl md:text-6xl lg:text-7xl font-bold font-heading text-foreground leading-tight mb-6">

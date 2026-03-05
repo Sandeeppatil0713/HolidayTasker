@@ -8,6 +8,7 @@ import {
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarTrigger, useSidebar,
 } from "@/components/ui/sidebar";
 import { NavLink } from "@/components/NavLink";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -85,9 +86,12 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center border-b border-border px-4 bg-card/50">
-            <SidebarTrigger className="mr-4" />
-            <h2 className="text-sm font-medium text-muted-foreground">Welcome back 👋</h2>
+          <header className="h-14 flex items-center justify-between border-b border-border px-4 bg-card/50">
+            <div className="flex items-center">
+              <SidebarTrigger className="mr-4" />
+              <h2 className="text-sm font-medium text-muted-foreground">Welcome back 👋</h2>
+            </div>
+            <ThemeToggle />
           </header>
           <main className="flex-1 p-4 md:p-6 overflow-auto">
             {children}

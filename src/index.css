@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&family=Roboto+Condensed:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -52,8 +52,54 @@
     --shadow-card-hover: 0 8px 32px -4px hsl(210 20% 50% / 0.15);
     --shadow-hero: 0 20px 60px -15px hsl(204 67% 52% / 0.25);
 
-    --font-heading: 'Space Grotesk', sans-serif;
-    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-heading: 'Roboto Condensed', sans-serif;
+    --font-body: 'Roboto Condensed', sans-serif;
+  }
+
+  .dark {
+    --background: 0 0% 8%;
+    --foreground: 200 100% 85%;
+
+    --card: 0 0% 12%;
+    --card-foreground: 200 100% 85%;
+
+    --popover: 0 0% 10%;
+    --popover-foreground: 200 100% 85%;
+
+    --primary: 200 100% 70%;
+    --primary-foreground: 0 0% 10%;
+
+    --secondary: 0 0% 5%;
+    --secondary-foreground: 200 100% 85%;
+
+    --accent: 200 90% 60%;
+    --accent-foreground: 0 0% 10%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 200 20% 65%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 200 100% 70%;
+
+    --sidebar-background: 0 0% 10%;
+    --sidebar-foreground: 200 20% 70%;
+    --sidebar-primary: 200 100% 70%;
+    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 200 100% 75%;
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 200 100% 70%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(200 100% 70%), hsl(200 80% 50%), hsl(200 60% 40%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 12%), hsl(0 0% 8%));
+    --gradient-accent: linear-gradient(135deg, hsl(200 100% 70%), hsl(0 0% 5%));
+    --shadow-card: 0 4px 24px -4px hsl(0 0% 0% / 0.3);
+    --shadow-card-hover: 0 8px 32px -4px hsl(0 0% 0% / 0.5);
+    --shadow-hero: 0 20px 60px -15px hsl(200 100% 70% / 0.3);
   }
 }
 
