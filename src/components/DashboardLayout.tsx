@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard, CheckSquare, Plane, Calendar, DollarSign, Search, PieChart, Settings, User, Menu,
+  LayoutDashboard, CheckSquare, Plane, Calendar, Search, PieChart, Settings, User, Menu, LogOut,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -9,13 +9,15 @@ import {
 } from "@/components/ui/sidebar";
 import { NavLink } from "@/components/NavLink";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const navItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "My Tasks", url: "/dashboard/tasks", icon: CheckSquare },
   { title: "Vacation Planner", url: "/dashboard/vacations", icon: Plane },
   { title: "Calendar", url: "/dashboard/calendar", icon: Calendar },
-  { title: "Budget Tracker", url: "/dashboard/budget", icon: DollarSign },
   { title: "Smart Search", url: "/dashboard/search", icon: Search },
   { title: "Analytics", url: "/dashboard/analytics", icon: PieChart },
 ];
@@ -81,17 +83,46 @@ function AppSidebar() {
 }
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    await signOut();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+    });
+    navigate("/");
+  };
+
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="min-h-screen flex w-full relative">
+        {/* Background with gradient */}
+        <div className="fixed inset-0 z-0 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
+        </div>
+        
         <AppSidebar />
-        <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center justify-between border-b border-border px-4 bg-card/50">
+        <div className="flex-1 flex flex-col min-w-0 relative z-10">
+          <header className="h-14 flex items-center justify-between border-b border-border/50 px-4 bg-card/60 backdrop-blur-xl backdrop-saturate-150">
             <div className="flex items-center">
               <SidebarTrigger className="mr-4" />
               <h2 className="text-sm font-medium text-muted-foreground">Welcome back 👋</h2>
             </div>
-            <ThemeToggle />
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Logout</span>
+              </Button>
+            </div>
           </header>
           <main className="flex-1 p-4 md:p-6 overflow-auto">
             {children}

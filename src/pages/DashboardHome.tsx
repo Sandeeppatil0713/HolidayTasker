@@ -37,17 +37,22 @@ const priorityColors: Record<string, string> = {
 
 const DashboardHome = () => {
   return (
-    <div className="space-y-6">
-      <div>
+    <div className="space-y-6 relative">
+      {/* Subtle Background Pattern */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-30">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
+      </div>
+
+      <div className="relative z-10">
         <h1 className="text-2xl font-bold font-heading text-foreground">Dashboard</h1>
         <p className="text-sm text-muted-foreground">Here's what's happening today</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
         {stats.map((s, i) => (
           <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-            className="rounded-xl bg-card p-5 shadow-card border border-border/50">
+            className="rounded-xl bg-card/95 backdrop-blur-sm p-5 shadow-card border border-border/50">
             <div className="flex items-center justify-between mb-3">
               <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${s.color}`}>
                 <s.icon className="h-5 w-5" />
@@ -63,7 +68,7 @@ const DashboardHome = () => {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Chart */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="lg:col-span-2 rounded-xl bg-card p-6 shadow-card border border-border/50">
+          className="lg:col-span-2 rounded-xl bg-card/95 backdrop-blur-sm p-6 shadow-card border border-border/50">
           <h3 className="text-base font-semibold font-heading text-foreground mb-4">Weekly Task Completion</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={weekData}>
@@ -78,7 +83,7 @@ const DashboardHome = () => {
 
         {/* Pie */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-          className="rounded-xl bg-card p-6 shadow-card border border-border/50">
+          className="rounded-xl bg-card/95 backdrop-blur-sm p-6 shadow-card border border-border/50">
           <h3 className="text-base font-semibold font-heading text-foreground mb-4">By Category</h3>
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
@@ -103,7 +108,7 @@ const DashboardHome = () => {
 
       {/* Upcoming tasks */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-        className="rounded-xl bg-card p-6 shadow-card border border-border/50">
+        className="rounded-xl bg-card/95 backdrop-blur-sm p-6 shadow-card border border-border/50 relative z-10">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-semibold font-heading text-foreground">Upcoming Tasks</h3>
           <Link to="/dashboard/tasks" className="text-xs font-medium text-primary hover:underline">View all</Link>

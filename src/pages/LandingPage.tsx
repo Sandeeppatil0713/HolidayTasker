@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { CheckCircle2, Plane, BarChart3, Search, PieChart, Star, ArrowRight, Twitter, Github, Linkedin, MapPin, Calendar, DollarSign } from "lucide-react";
+import { CheckCircle2, Plane, BarChart3, Search, PieChart, Star, ArrowRight, Twitter, Github, Linkedin, MapPin, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import heroBg from "@/assets/hero-bg.jpg";
@@ -8,10 +8,10 @@ import heroBg from "@/assets/hero-bg.jpg";
 const features = [
   { icon: CheckCircle2, title: "Smart To-Do Management", desc: "Organize tasks with priorities, categories, and smart reminders that keep you productive.", color: "text-primary" },
   { icon: Plane, title: "Vacation Planner", desc: "Discover destinations, build itineraries, and plan every detail of your dream trips.", color: "text-secondary" },
-  { icon: DollarSign, title: "Budget Tracker", desc: "Track expenses for daily life and travel with visual breakdowns and comparisons.", color: "text-accent" },
-  { icon: Search, title: "Smart Search", desc: "Find anything instantly — tasks, trips, notes — with powerful filters.", color: "text-primary" },
-  { icon: PieChart, title: "Analytics Dashboard", desc: "Beautiful charts showing your productivity trends, travel stats, and spending.", color: "text-secondary" },
-  { icon: Calendar, title: "Calendar Integration", desc: "See your tasks and trips in a unified calendar view for perfect planning.", color: "text-accent" },
+  { icon: Search, title: "Smart Search", desc: "Find anything instantly — tasks, trips, notes — with powerful filters.", color: "text-accent" },
+  { icon: PieChart, title: "Analytics Dashboard", desc: "Beautiful charts showing your productivity trends, travel stats, and insights.", color: "text-primary" },
+  { icon: Calendar, title: "Calendar Integration", desc: "See your tasks and trips in a unified calendar view for perfect planning.", color: "text-secondary" },
+  { icon: BarChart3, title: "Progress Tracking", desc: "Monitor your goals and achievements with detailed progress reports.", color: "text-accent" },
 ];
 
 const testimonials = [
@@ -41,10 +41,10 @@ const LandingPage = () => {
             <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Features</a>
             <a href="#testimonials" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Testimonials</a>
             <ThemeToggle />
-            <Link to="/dashboard">
+            <Link to="/login">
               <Button size="sm" variant="outline" className="mr-2">Log In</Button>
             </Link>
-            <Link to="/dashboard">
+            <Link to="/signup">
               <Button size="sm">Get Started</Button>
             </Link>
           </div>
@@ -114,7 +114,7 @@ const LandingPage = () => {
             className="absolute top-1/3 right-1/3 w-12 h-12 rounded-full bg-accent/20 backdrop-blur-sm flex items-center justify-center animate-pulse-soft"
             style={{ animationDelay: '1s' }}
           >
-            <DollarSign className="w-6 h-6 text-accent" />
+            <Search className="w-6 h-6 text-accent" />
           </motion.div>
         </div>
 
@@ -122,14 +122,14 @@ const LandingPage = () => {
           <motion.div className="max-w-3xl mx-auto text-center" initial="hidden" animate="visible">
             <motion.h1 variants={fadeUp} custom={0} className="text-4xl md:text-6xl lg:text-7xl font-bold font-heading text-foreground leading-tight mb-6">
               Plan Your Tasks.{" "}
-              <span className="bg-clip-text text-transparent gradient-hero">Plan Your Trips.</span>{" "}
+              <span className="text-primary font-extrabold">Plan Your Trips.</span>{" "}
               Live Balanced.
             </motion.h1>
             <motion.p variants={fadeUp} custom={1} className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
               The all-in-one productivity platform that seamlessly combines daily task management with vacation planning, so you can work smarter and travel better.
             </motion.p>
             <motion.div variants={fadeUp} custom={2} className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/dashboard">
+              <Link to="/signup">
                 <Button size="lg" className="text-base px-8 shadow-hero">
                   Get Started <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -188,7 +188,7 @@ const LandingPage = () => {
             <div className="grid grid-cols-3 gap-4">
               {[
                 { icon: CheckCircle2, title: "Today's Tasks", items: ["Review Q4 report", "Book flight to Bali", "Team standup at 10am"], color: "bg-primary/10 text-primary" },
-                { icon: MapPin, title: "Upcoming Trip", items: ["Bali, Indonesia", "Dec 15 – Dec 22", "Budget: $2,500"], color: "bg-secondary/10 text-secondary" },
+                { icon: MapPin, title: "Upcoming Trip", items: ["Bali, Indonesia", "Dec 15 – Dec 22", "8 days adventure"], color: "bg-secondary/10 text-secondary" },
                 { icon: BarChart3, title: "This Week", items: ["12 tasks completed", "85% productivity", "2 trips planned"], color: "bg-accent/10 text-accent" },
               ].map((card) => (
                 <div key={card.title} className="rounded-xl bg-muted/50 p-4 border border-border/30">
@@ -245,7 +245,7 @@ const LandingPage = () => {
             className="max-w-3xl mx-auto text-center rounded-2xl gradient-hero p-12 md:p-16 shadow-hero">
             <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary-foreground mb-4">Ready to Get Started?</h2>
             <p className="text-primary-foreground/80 mb-8">Join thousands of users who manage their tasks and trips in one place.</p>
-            <Link to="/dashboard">
+            <Link to="/signup">
               <Button size="lg" variant="secondary" className="text-base px-8">
                 Start Free Today <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
