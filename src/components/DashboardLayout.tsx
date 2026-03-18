@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, CheckSquare, Plane, Calendar, Search, PieChart, Settings, User, Menu, LogOut,
 } from "lucide-react";
@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/sidebar";
 import { NavLink } from "@/components/NavLink";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 const navItems = [
@@ -28,9 +28,13 @@ const bottomItems = [
 ];
 
 function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, setOpenMobile, isMobile } = useSidebar();
   const collapsed = state === "collapsed";
-  const location = useLocation();
+  const { user } = useAuth();
+
+  const handleNavClick = () => {
+    if (isMobile) setOpenMobile(false);
+  };
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
@@ -39,9 +43,26 @@ function AppSidebar() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-hero shrink-0">
             <Plane className="h-4 w-4 text-primary-foreground" />
           </div>
-          {!collapsed && <span className="text-base font-bold font-heading text-foreground">Holiday Tasker</span>}
+          {!collapsed && <span className="text-base font-bold font-heading heading-gradient">Holiday Tasker</span>}
         </Link>
       </div>
+      {!collapsed && user && (
+        <div className="px-4 py-3 border-b border-sidebar-border">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+              <User className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">
+                {user.user_metadata?.username?.split(' ')[0]}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">
+                {user.email}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       <SidebarContent className="px-2 py-4">
         <SidebarGroup>
           <SidebarGroupLabel className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Main</SidebarGroupLabel>
@@ -50,7 +71,7 @@ function AppSidebar() {
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink to={item.url} end className="hover:bg-sidebar-accent rounded-lg transition-colors" activeClassName="bg-sidebar-accent text-sidebar-primary font-medium">
+                    <NavLink to={item.url} end onClick={handleNavClick} className="hover:bg-sidebar-accent rounded-lg transition-colors" activeClassName="bg-sidebar-accent text-sidebar-primary font-medium">
                       <item.icon className="mr-2 h-4 w-4 shrink-0" />
                       {!collapsed && <span>{item.title}</span>}
                     </NavLink>
@@ -67,7 +88,7 @@ function AppSidebar() {
               {bottomItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink to={item.url} end className="hover:bg-sidebar-accent rounded-lg transition-colors" activeClassName="bg-sidebar-accent text-sidebar-primary font-medium">
+                    <NavLink to={item.url} end onClick={handleNavClick} className="hover:bg-sidebar-accent rounded-lg transition-colors" activeClassName="bg-sidebar-accent text-sidebar-primary font-medium">
                       <item.icon className="mr-2 h-4 w-4 shrink-0" />
                       {!collapsed && <span>{item.title}</span>}
                     </NavLink>
@@ -83,48 +104,45 @@ function AppSidebar() {
 }
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogout = async () => {
+  const handleSignOut = async () => {
     await signOut();
     toast({
-      title: "Logged out",
-      description: "You have been successfully logged out.",
+      title: "Signed out",
+      description: "You have been signed out successfully.",
     });
     navigate("/");
   };
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full relative">
-        {/* Background with gradient */}
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
-        </div>
-        
+      <div className="min-h-screen flex w-full">
         <AppSidebar />
-        <div className="flex-1 flex flex-col min-w-0 relative z-10">
-          <header className="h-14 flex items-center justify-between border-b border-border/50 px-4 bg-card/60 backdrop-blur-xl backdrop-saturate-150">
+        <div className="flex-1 flex flex-col min-w-0">
+          <header className="h-14 flex items-center justify-between border-b border-border/50 px-4 bg-card/50 backdrop-blur-md">
             <div className="flex items-center">
               <SidebarTrigger className="mr-4" />
-              <h2 className="text-sm font-medium text-muted-foreground">Welcome back 👋</h2>
+              <h2 className="text-sm font-medium text-muted-foreground">
+                Welcome back, <span className="text-foreground font-semibold">{user?.user_metadata?.username?.split(' ')[0]}</span> 👋
+              </h2>
             </div>
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={handleLogout}
+                onClick={handleSignOut}
                 className="text-muted-foreground hover:text-foreground"
               >
                 <LogOut className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Logout</span>
+                Sign Out
               </Button>
             </div>
           </header>
-          <main className="flex-1 p-4 md:p-6 overflow-auto">
+          <main className="flex-1 p-4 md:p-6 overflow-auto bg-white dark:bg-[#1a2235]">
             {children}
           </main>
         </div>

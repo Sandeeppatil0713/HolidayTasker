@@ -17,7 +17,7 @@ const allItems = [
 
 const typeColors: Record<string, string> = {
   task: "bg-primary/10 text-primary",
-  trip: "bg-accent/10 text-accent",
+  trip: "bg-orange-100 text-orange-500",
   note: "bg-secondary/10 text-secondary",
 };
 
@@ -36,12 +36,12 @@ const SmartSearchPage = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold font-heading text-foreground">Smart Search</h1>
+        <h1 className="text-2xl font-bold font-heading heading-gradient">Smart Search</h1>
         <p className="text-sm text-muted-foreground">Find anything — tasks, trips, notes — instantly</p>
       </div>
 
       {/* Search bar */}
-      <div className="rounded-xl bg-card p-5 shadow-card border border-border/50">
+      <div className="rounded-xl card-glass p-5 ">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Search tasks, trips, notes..." value={query} onChange={(e) => setQuery(e.target.value)}
@@ -74,7 +74,7 @@ const SmartSearchPage = () => {
         <p className="text-xs text-muted-foreground">{results.length} results found</p>
         {results.map((item, i) => (
           <motion.div key={`${item.title}-${i}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
-            className="flex items-center gap-3 rounded-xl bg-card px-4 py-3 shadow-card border border-border/50 hover:shadow-card-hover transition-all cursor-pointer">
+            className="flex items-center gap-3 rounded-xl card-glass px-4 py-3  hover:shadow-card-hover transition-all cursor-pointer">
             <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${typeColors[item.type]}`}>
               <item.icon className="h-4 w-4" />
             </div>
@@ -91,3 +91,5 @@ const SmartSearchPage = () => {
 };
 
 export default SmartSearchPage;
+
+

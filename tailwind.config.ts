@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Roboto Condensed', 'sans-serif'],
+        heading: ['Righteous', 'cursive'],
         body: ['Roboto Condensed', 'sans-serif'],
       },
       colors: {

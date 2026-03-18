@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Plane, Mail, Lock, Loader2 } from "lucide-react";
+import { Plane, Mail, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -29,30 +29,21 @@ const LoginPage = () => {
         description: error.message,
         variant: "destructive",
       });
-      setLoading(false);
     } else {
       toast({
         title: "Success",
-        description: "Logged in successfully!",
+        description: "Welcome back!",
       });
       navigate("/dashboard");
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <img 
-          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80" 
-          alt="Background"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/70 to-background/80 backdrop-blur-sm" />
-      </div>
-
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/60 backdrop-blur-xl border-b border-border/50">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/70 backdrop-blur-xl border-b border-border/50 shadow-sm">
         <div className="container mx-auto flex items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
@@ -64,86 +55,71 @@ const LoginPage = () => {
         </div>
       </nav>
 
-      {/* Login Form */}
-      <div className="flex-1 flex items-center justify-center px-6 pt-24 pb-12 relative z-10">
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center px-6 pt-24 pb-12 relative">
+        <div className="absolute inset-0">
+          <img src="https://images.unsplash.com/photo-1682687220063-4742bd7fd538?w=1920&q=80" alt="" className="w-full h-full object-cover opacity-5" />
+        </div>
+        <div className="absolute inset-0 gradient-mesh opacity-30"></div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-md"
+          className="w-full max-w-md relative z-10"
         >
-          <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold font-heading text-foreground mb-2">
-              Welcome Back
-            </h1>
-            <p className="text-muted-foreground">
-              Sign in to continue to your dashboard
-            </p>
-          </div>
+          <form onSubmit={handleSubmit} className="auth-form">
+            <h1 className="heading">WELCOME BACK</h1>
+            
+            <div className="inputGroup">
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="input"
+              />
+              <label htmlFor="email">Email Address</label>
+            </div>
 
-          <div className="rounded-xl bg-card/90 backdrop-blur-xl p-8 shadow-2xl border border-border/50">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground">
-                  Email
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
+            <div className="inputGroup">
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="input"
+              />
+              <label htmlFor="password">Password</label>
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-foreground">
-                  Password
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
+            <button
+              type="submit"
+              className="btn"
+              disabled={loading}
+            >
+              {loading ? "SIGNING IN..." : "SIGN IN"}
+            </button>
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
-                  </>
-                ) : (
-                  "Log In"
-                )}
-              </Button>
-            </form>
-
-            <div className="mt-6 text-center text-sm text-muted-foreground">
-              Don't have an account?{" "}
+            <div className="mt-4 text-center text-sm">
+              <span className="text-muted-foreground">Don't have an account? </span>
               <Link
                 to="/signup"
                 className="text-primary hover:underline font-medium"
               >
-                Sign Up
+                Sign up
               </Link>
             </div>
+          </form>
+
+          <div className="mt-6 text-center">
+            <Link
+              to="/"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              ← Back to home
+            </Link>
           </div>
         </motion.div>
       </div>
@@ -152,3 +128,5 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
+

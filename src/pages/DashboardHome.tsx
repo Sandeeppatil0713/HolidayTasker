@@ -9,10 +9,10 @@ const weekData = [
 ];
 
 const categoryData = [
-  { name: "Work", value: 40, color: "hsl(204, 67%, 52%)" },
-  { name: "Personal", value: 25, color: "hsl(145, 63%, 42%)" },
-  { name: "Travel", value: 20, color: "hsl(33, 87%, 62%)" },
-  { name: "Urgent", value: 15, color: "hsl(0, 84%, 60%)" },
+  { name: "Work",     value: 40, color: "#0ea5e9" },
+  { name: "Personal", value: 25, color: "#06b6d4" },
+  { name: "Travel",   value: 20, color: "#2dd4bf" },
+  { name: "Urgent",   value: 15, color: "#6366f1" },
 ];
 
 const stats = [
@@ -37,29 +37,24 @@ const priorityColors: Record<string, string> = {
 
 const DashboardHome = () => {
   return (
-    <div className="space-y-6 relative">
-      {/* Subtle Background Pattern */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-30">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
-      </div>
-
-      <div className="relative z-10">
-        <h1 className="text-2xl font-bold font-heading text-foreground">Dashboard</h1>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold font-heading heading-gradient">Dashboard</h1>
         <p className="text-sm text-muted-foreground">Here's what's happening today</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s, i) => (
           <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-            className="rounded-xl bg-card/95 backdrop-blur-sm p-5 shadow-card border border-border/50">
+            className="rounded-xl card-glass p-5 ">
             <div className="flex items-center justify-between mb-3">
               <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${s.color}`}>
                 <s.icon className="h-5 w-5" />
               </div>
               <span className="text-xs font-medium text-secondary">{s.change}</span>
             </div>
-            <div className="text-2xl font-bold font-heading text-foreground">{s.value}</div>
+            <div className="text-2xl font-bold font-heading heading-gradient">{s.value}</div>
             <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
           </motion.div>
         ))}
@@ -68,7 +63,7 @@ const DashboardHome = () => {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Chart */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="lg:col-span-2 rounded-xl bg-card/95 backdrop-blur-sm p-6 shadow-card border border-border/50">
+          className="lg:col-span-2 rounded-xl card-glass p-6 ">
           <h3 className="text-base font-semibold font-heading text-foreground mb-4">Weekly Task Completion</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={weekData}>
@@ -76,14 +71,14 @@ const DashboardHome = () => {
               <XAxis dataKey="day" tick={{ fontSize: 12 }} stroke="hsl(210, 15%, 45%)" />
               <YAxis tick={{ fontSize: 12 }} stroke="hsl(210, 15%, 45%)" />
               <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid hsl(210, 20%, 90%)", fontSize: "12px" }} />
-              <Bar dataKey="tasks" fill="hsl(204, 67%, 52%)" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="tasks" fill="#0ea5e9" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </motion.div>
 
         {/* Pie */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-          className="rounded-xl bg-card/95 backdrop-blur-sm p-6 shadow-card border border-border/50">
+          className="rounded-xl card-glass p-6 ">
           <h3 className="text-base font-semibold font-heading text-foreground mb-4">By Category</h3>
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
@@ -108,7 +103,7 @@ const DashboardHome = () => {
 
       {/* Upcoming tasks */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-        className="rounded-xl bg-card/95 backdrop-blur-sm p-6 shadow-card border border-border/50 relative z-10">
+        className="rounded-xl card-glass p-6 ">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-semibold font-heading text-foreground">Upcoming Tasks</h3>
           <Link to="/dashboard/tasks" className="text-xs font-medium text-primary hover:underline">View all</Link>
@@ -133,3 +128,5 @@ const DashboardHome = () => {
 };
 
 export default DashboardHome;
+
+
