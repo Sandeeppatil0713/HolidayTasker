@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/sidebar";
 import { NavLink } from "@/components/NavLink";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { NotificationBell } from "@/components/NotificationBell";
+import { CommandPalette } from "@/components/CommandPalette";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -123,13 +125,17 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <header className="h-14 flex items-center justify-between border-b border-border/50 px-4 bg-card/50 backdrop-blur-md">
-            <div className="flex items-center">
-              <SidebarTrigger className="mr-4" />
-              <h2 className="text-sm font-medium text-muted-foreground">
+            {/* Left: trigger + search */}
+            <div className="flex items-center gap-3">
+              <SidebarTrigger />
+              <CommandPalette />
+            </div>
+            {/* Right: welcome + actions */}
+            <div className="flex items-center gap-2">
+              <h2 className="hidden md:block text-sm font-medium text-muted-foreground mr-1">
                 Welcome back, <span className="text-foreground font-semibold">{user?.user_metadata?.username?.split(' ')[0]}</span> 👋
               </h2>
-            </div>
-            <div className="flex items-center gap-2">
+              <NotificationBell />
               <ThemeToggle />
               <Button
                 variant="ghost"
