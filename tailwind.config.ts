@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Righteous', 'cursive'],
-        body: ['Roboto Condensed', 'sans-serif'],
+        heading: ['Archivo Black', 'system-ui', 'sans-serif'],
+        body: ['Archivo Black', 'system-ui', 'sans-serif'],
+        nav: ['Archivo Black', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
