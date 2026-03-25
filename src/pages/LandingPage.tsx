@@ -1,17 +1,21 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { CheckCircle2, Plane, BarChart3, Search, PieChart, Star, ArrowRight, Twitter, Github, Linkedin, MapPin, Calendar, User } from "lucide-react";
+import {
+  ListTodo, Globe2, Zap, BarChart2, CalendarDays,
+  User, Plane, CheckCircle2, MapPin, TrendingUp,
+  Twitter, Github, Linkedin, Star, Calendar, BarChart3
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/contexts/AuthContext";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const features = [
-  { icon: CheckCircle2, title: "Smart To-Do Management", desc: "Organize tasks with priorities, categories, and smart reminders that keep you productive.", color: "text-primary" },
-  { icon: Plane, title: "Vacation Planner", desc: "Discover destinations, build itineraries, and plan every detail of your dream trips.", color: "text-secondary" },
-  { icon: Search, title: "Smart Search", desc: "Find anything instantly — tasks, trips, notes — with powerful filters.", color: "text-primary" },
-  { icon: PieChart, title: "Analytics Dashboard", desc: "Beautiful charts showing your productivity trends, travel stats, and spending.", color: "text-secondary" },
-  { icon: Calendar, title: "Calendar Integration", desc: "See your tasks and trips in a unified calendar view for perfect planning.", color: "text-accent" },
+  { icon: ListTodo,     title: "Smart To-Do Management",  desc: "Organize tasks with priorities, categories, and smart reminders that keep you productive.",  bg: "bg-violet-100 dark:bg-violet-950", color: "text-violet-600 dark:text-violet-400" },
+  { icon: Globe2,       title: "Vacation Planner",         desc: "Discover destinations, build itineraries, and plan every detail of your dream trips.",        bg: "bg-amber-100 dark:bg-amber-950",   color: "text-amber-600 dark:text-amber-400" },
+  { icon: Zap,          title: "Smart Search",             desc: "Find anything instantly — tasks, trips, notes — with powerful filters.",                       bg: "bg-sky-100 dark:bg-sky-950",       color: "text-sky-600 dark:text-sky-400" },
+  { icon: BarChart2,    title: "Analytics Dashboard",      desc: "Beautiful charts showing your productivity trends, travel stats, and spending.",               bg: "bg-emerald-100 dark:bg-emerald-950", color: "text-emerald-600 dark:text-emerald-400" },
+  { icon: CalendarDays, title: "Calendar Integration",     desc: "See your tasks and trips in a unified calendar view for perfect planning.",                    bg: "bg-rose-100 dark:bg-rose-950",     color: "text-rose-600 dark:text-rose-400" },
 ];
 
 const testimonials = [
@@ -42,49 +46,57 @@ const LandingPage = () => {
       </svg>
 
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/70 backdrop-blur-xl border-b border-border/50 shadow-sm">
-        <div className="container mx-auto flex items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-              <Plane className="h-5 w-5 text-primary-foreground" />
+      <nav className="fixed top-4 left-0 right-0 z-50 flex justify-center px-6">
+        <div className="w-full max-w-5xl flex items-center justify-between px-4 py-2 rounded-full bg-background/95 backdrop-blur-xl border border-border/50 shadow-lg">
+
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2.5 shrink-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary">
+              <Plane className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold font-heading text-foreground">Holiday Tasker</span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-base font-nav text-foreground">HOLIDAY</span>
+              <span className="text-base font-nav text-foreground">TASKER</span>
+            </div>
           </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Features</a>
-            <a href="#testimonials" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Testimonials</a>
+
+          {/* Center nav links */}
+          <div className="hidden md:flex items-center gap-1">
+            <a href="#features" className="px-4 py-1.5 text-sm font-nav text-muted-foreground hover:text-foreground transition-colors rounded-full hover:bg-muted/60">Features</a>
+            <a href="#testimonials" className="px-4 py-1.5 text-sm font-nav text-muted-foreground hover:text-foreground transition-colors rounded-full hover:bg-muted/60">Testimonials</a>
+            <a href="#" className="px-4 py-1.5 text-sm font-nav text-muted-foreground hover:text-foreground transition-colors rounded-full hover:bg-muted/60">Pricing</a>
+          </div>
+
+          {/* Right actions */}
+          <div className="flex items-center gap-2">
             <ThemeToggle />
             {user ? (
               <>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <User className="h-4 w-4" />
+                <div className="hidden sm:flex items-center gap-1.5 text-sm font-nav text-muted-foreground px-2">
+                  <User className="h-3.5 w-3.5" />
                   <span>{user.user_metadata?.username?.split(' ')[0]}</span>
                 </div>
                 <Link to="/dashboard">
-                  <button className="c-button c-button--gooey">
-                    Go to Dashboard
-                    <div className="c-button__blobs">
-                      <div></div>
-                      <div></div>
-                      <div></div>
-                    </div>
-                  </button>
+                  <Button className="rounded-full pl-2 pr-4 h-9 text-sm font-semibold flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-foreground/20">
+                      <Plane className="h-3.5 w-3.5" />
+                    </span>
+                    Dashboard
+                  </Button>
                 </Link>
               </>
             ) : (
               <>
                 <Link to="/login">
-                  <Button size="sm" variant="outline" className="mr-2">Log In</Button>
+                  <Button size="sm" variant="ghost" className="rounded-full px-4 text-sm font-medium">Sign in</Button>
                 </Link>
                 <Link to="/signup">
-                  <button className="c-button c-button--gooey">
-                    Get Started
-                    <div className="c-button__blobs">
-                      <div></div>
-                      <div></div>
-                      <div></div>
-                    </div>
-                  </button>
+                  <Button className="rounded-full pl-2 pr-5 h-9 text-sm font-semibold flex items-center gap-2">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary-foreground/20">
+                      <Plane className="h-3.5 w-3.5" />
+                    </span>
+                    Get started
+                  </Button>
                 </Link>
               </>
             )}
@@ -94,7 +106,6 @@ const LandingPage = () => {
 
       {/* Hero */}
       <section className="relative overflow-hidden pt-32 pb-20 md:pt-44 md:pb-32">
-        {/* Gradient Mesh Background */}
         <div className="absolute inset-0 gradient-mesh opacity-40"></div>
         
         <div className="absolute inset-0 opacity-10">
@@ -154,32 +165,28 @@ const LandingPage = () => {
 
         <div className="container mx-auto px-6 relative z-10">
           <motion.div className="max-w-4xl mx-auto text-center" initial="hidden" animate="visible">
-            <motion.h1 variants={fadeUp} custom={0} className="text-5xl md:text-7xl lg:text-8xl font-bold font-heading heading-gradient leading-tight mb-8">
-              Plan Your Tasks. Plan Your Trips. Live Balanced.
+            <motion.h1 variants={fadeUp} custom={0} className="text-5xl md:text-7xl lg:text-8xl font-bold font-heading heading-gradient leading-tight mb-6">
+              Plan Your Tasks.<br />Plan Your Trips.<br />Live Balanced.
             </motion.h1>
-            <motion.p variants={fadeUp} custom={1} className="text-xl md:text-2xl text-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed">
+            <motion.p variants={fadeUp} custom={1} className="text-lg md:text-xl text-foreground/70 mb-10 max-w-2xl mx-auto leading-relaxed">
               The all-in-one productivity platform that seamlessly combines daily task management with vacation planning.
             </motion.p>
-            <motion.div variants={fadeUp} custom={2} className="flex flex-col sm:flex-row gap-4 justify-center">
+            <motion.div variants={fadeUp} custom={2} className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link to="/signup">
-                <button className="c-button c-button--gooey">
-                  Get Started
-                  <div className="c-button__blobs">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-                </button>
+                <Button className="rounded-full pl-2 pr-6 h-11 text-sm font-semibold flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-foreground/20">
+                    <Plane className="h-4 w-4" />
+                  </span>
+                  Get Started Free
+                </Button>
               </Link>
               <a href="#features">
-                <button className="c-button c-button--gooey-outline">
+                <Button variant="outline" className="rounded-full pl-2 pr-6 h-11 text-sm font-semibold flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-muted">
+                    <ListTodo className="h-4 w-4 text-primary" />
+                  </span>
                   Explore Features
-                  <div className="c-button__blobs">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-                </button>
+                </Button>
               </a>
             </motion.div>
           </motion.div>
@@ -207,11 +214,11 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f, i) => (
               <motion.div key={f.title} custom={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                className="group rounded-xl bg-card/80 backdrop-blur-sm p-6 shadow-card hover:shadow-glow transition-all duration-300 border border-border/50 hover:border-primary/30">
-                <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-muted ${f.color}`}>
-                  <f.icon className="h-6 w-6" />
+                className="group rounded-xl bg-card p-6 shadow-card hover:shadow-card-hover transition-all duration-300 border border-border hover:border-primary/30">
+                <div className={`mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl ${f.bg}`}>
+                  <f.icon className={`h-5 w-5 ${f.color}`} />
                 </div>
-                <h3 className="text-lg font-semibold font-heading text-foreground mb-2">{f.title}</h3>
+                <h3 className="text-base font-semibold font-heading text-foreground mb-2">{f.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
               </motion.div>
             ))}
@@ -231,13 +238,13 @@ const LandingPage = () => {
             className="max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-hero border border-primary/20 bg-card/80 backdrop-blur-sm p-6 md:p-10">
             <div className="grid grid-cols-3 gap-4">
               {[
-                { icon: CheckCircle2, title: "Today's Tasks", items: ["Review Q4 report", "Book flight to Bali", "Team standup at 10am"], color: "bg-primary/10 text-primary" },
-                { icon: MapPin, title: "Upcoming Trip", items: ["Bali, Indonesia", "Dec 15 – Dec 22", "7 days adventure"], color: "bg-secondary/10 text-secondary" },
-                { icon: BarChart3, title: "This Week", items: ["12 tasks completed", "85% productivity", "2 trips planned"], color: "bg-accent/10 text-accent" },
+                { icon: CheckCircle2, title: "Today's Tasks",  items: ["Review Q4 report", "Book flight to Bali", "Team standup at 10am"], bg: "bg-violet-100 dark:bg-violet-950", color: "text-violet-600 dark:text-violet-400" },
+                { icon: MapPin,       title: "Upcoming Trip",  items: ["Bali, Indonesia", "Dec 15 – Dec 22", "7 days adventure"],          bg: "bg-amber-100 dark:bg-amber-950",   color: "text-amber-600 dark:text-amber-400" },
+                { icon: TrendingUp,   title: "This Week",      items: ["12 tasks completed", "85% productivity", "2 trips planned"],        bg: "bg-emerald-100 dark:bg-emerald-950", color: "text-emerald-600 dark:text-emerald-400" },
               ].map((card) => (
-                <div key={card.title} className="rounded-xl bg-gradient-to-br from-card to-muted/30 p-4 border border-border/30 hover:border-primary/30 transition-all">
-                  <div className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${card.color} mb-3`}>
-                    <card.icon className="h-4 w-4" />
+                <div key={card.title} className="rounded-xl bg-background p-4 border border-border hover:border-primary/30 transition-all">
+                  <div className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${card.bg} mb-3`}>
+                    <card.icon className={`h-4 w-4 ${card.color}`} />
                   </div>
                   <h4 className="font-semibold text-sm font-heading text-foreground mb-2">{card.title}</h4>
                   <ul className="space-y-1.5">
@@ -290,17 +297,17 @@ const LandingPage = () => {
           <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
             className="max-w-3xl mx-auto text-center rounded-2xl gradient-hero p-12 md:p-16 shadow-hero border border-primary/20">
             <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary-foreground mb-4">Ready to Get Started?</h2>
-            <p className="text-primary-foreground/90 mb-8">Join thousands of users who manage their tasks and trips in one place.</p>
-            <Link to="/signup">
-              <button className="c-button c-button--gooey-white">
-                Start Free Today
-                <div className="c-button__blobs">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </div>
-              </button>
-            </Link>
+            <p className="text-primary-foreground/80 mb-8 text-base">Join thousands of users who manage their tasks and trips in one place.</p>
+            <div className="flex justify-center">
+              <Link to="/signup">
+                <Button className="rounded-full pl-2 pr-6 h-11 text-sm font-semibold flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-foreground/20">
+                    <Plane className="h-4 w-4" />
+                  </span>
+                  Start Free Today
+                </Button>
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -332,9 +339,9 @@ const LandingPage = () => {
                 </a>
               </li>
               <li className="relative group">
-                <a href="#" className="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 hover:bg-secondary">
-                  <Github className="h-5 w-5 text-foreground group-hover:text-white transition-colors" />
-                  <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-secondary text-white text-xs px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 group-hover:-top-12 transition-all duration-300 pointer-events-none whitespace-nowrap after:content-[''] after:absolute after:bottom-[-3px] after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-secondary after:rotate-45">
+                <a href="#" className="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 hover:bg-foreground">
+                  <Github className="h-5 w-5 text-foreground group-hover:text-background transition-colors" />
+                  <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-foreground text-background text-xs px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 group-hover:-top-12 transition-all duration-300 pointer-events-none whitespace-nowrap after:content-[''] after:absolute after:bottom-[-3px] after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-foreground after:rotate-45">
                     Github
                   </span>
                 </a>
