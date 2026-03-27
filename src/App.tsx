@@ -16,6 +16,8 @@ import VacationsPage from "./pages/VacationsPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SmartSearchPage from "./pages/SmartSearchPage";
 import CalendarPage from "./pages/CalendarPage";
+import SettingsPage from "./pages/SettingsPage";
+import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,8 +40,8 @@ const App = () => (
               <Route path="/dashboard/analytics" element={<ProtectedRoute><DashboardLayout><AnalyticsPage /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/search" element={<ProtectedRoute><DashboardLayout><SmartSearchPage /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/calendar" element={<ProtectedRoute><DashboardLayout><CalendarPage /></DashboardLayout></ProtectedRoute>} />
-              <Route path="/dashboard/settings" element={<ProtectedRoute><DashboardLayout><div className="text-center py-20 text-muted-foreground">Settings coming soon</div></DashboardLayout></ProtectedRoute>} />
-              <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardLayout><div className="text-center py-20 text-muted-foreground">Profile coming soon</div></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard/settings" element={<ProtectedRoute><DashboardLayout><SettingsPage /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardLayout><ProfilePage /></DashboardLayout></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
