@@ -5,7 +5,17 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import { FavouritesProvider } from "./contexts/FavouritesContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
+import AdminLayout from "./components/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminNotifications from "./pages/admin/AdminNotifications";
+import AdminFeedback from "./pages/admin/AdminFeedback";
+import AdminSettings from "./pages/admin/AdminSettings";
+import AdminProfile from "./pages/admin/AdminProfile";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -15,6 +25,7 @@ import TasksPage from "./pages/TasksPage";
 import VacationsPage from "./pages/VacationsPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SmartSearchPage from "./pages/SmartSearchPage";
+import FavouritePlacesPage from "./pages/FavouritePlacesPage";
 import CalendarPage from "./pages/CalendarPage";
 import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -26,6 +37,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <AuthProvider>
+        <FavouritesProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner />
@@ -39,13 +51,23 @@ const App = () => (
               <Route path="/dashboard/vacations" element={<ProtectedRoute><DashboardLayout><VacationsPage /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/analytics" element={<ProtectedRoute><DashboardLayout><AnalyticsPage /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/search" element={<ProtectedRoute><DashboardLayout><SmartSearchPage /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard/favourites" element={<ProtectedRoute><DashboardLayout><FavouritePlacesPage /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/calendar" element={<ProtectedRoute><DashboardLayout><CalendarPage /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/settings" element={<ProtectedRoute><DashboardLayout><SettingsPage /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardLayout><ProfilePage /></DashboardLayout></ProtectedRoute>} />
+              {/* Admin routes */}
+              <Route path="/admin" element={<AdminRoute><AdminLayout><AdminDashboard /></AdminLayout></AdminRoute>} />
+              <Route path="/admin/users" element={<AdminRoute><AdminLayout><AdminUsers /></AdminLayout></AdminRoute>} />
+              <Route path="/admin/analytics" element={<AdminRoute><AdminLayout><AdminAnalytics /></AdminLayout></AdminRoute>} />
+              <Route path="/admin/notifications" element={<AdminRoute><AdminLayout><AdminNotifications /></AdminLayout></AdminRoute>} />
+              <Route path="/admin/feedback" element={<AdminRoute><AdminLayout><AdminFeedback /></AdminLayout></AdminRoute>} />
+              <Route path="/admin/settings" element={<AdminRoute><AdminLayout><AdminSettings /></AdminLayout></AdminRoute>} />
+              <Route path="/admin/profile" element={<AdminRoute><AdminLayout><AdminProfile /></AdminLayout></AdminRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
+        </FavouritesProvider>
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>

@@ -13,7 +13,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { signIn, isAdmin } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -24,16 +24,12 @@ const LoginPage = () => {
     const { error } = await signIn(email, password);
 
     if (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      toast({
-        title: "Success",
-        description: "Welcome back!",
-      });
+      toast({ title: "Success", description: "Welcome back!" });
+      // Admin redirect — commented out for now
+      // const ADMIN_EMAILS = ['rocksandeep0713@gmail.com','jdsammed108@gmail.com','shubhamranjanagi16@gmail.com'];
+      // navigate(ADMIN_EMAILS.includes(email.toLowerCase()) ? "/admin" : "/dashboard");
       navigate("/dashboard");
     }
 
