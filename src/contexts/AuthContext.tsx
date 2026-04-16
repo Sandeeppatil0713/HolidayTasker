@@ -2,10 +2,21 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 
+export const ADMIN_EMAILS = [
+  "jdsammed108@gmail.com",
+  "shubhamranjanagi16",
+  "rocksandeep0713@gmail.com",
+];
+
+export function isAdminEmail(email: string | undefined): boolean {
+  return !!email && ADMIN_EMAILS.includes(email.toLowerCase().trim());
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  isAdmin: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string, username: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
@@ -64,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, isAdmin: isAdminEmail(user?.email), signIn, signUp, signOut }}>
       {loading ? (
         <div className="min-h-screen flex items-center justify-center bg-background">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent" />

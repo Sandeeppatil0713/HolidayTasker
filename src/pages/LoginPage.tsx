@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
+import { isAdminEmail } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -24,17 +25,10 @@ const LoginPage = () => {
     const { error } = await signIn(email, password);
 
     if (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      toast({
-        title: "Success",
-        description: "Welcome back!",
-      });
-      navigate("/dashboard");
+      toast({ title: "Welcome back!", description: "Signed in successfully." });
+      navigate(isAdminEmail(email) ? "/admin" : "/dashboard");
     }
 
     setLoading(false);
@@ -67,7 +61,7 @@ const LoginPage = () => {
           transition={{ duration: 0.5 }}
           className="w-full max-w-md relative z-10"
         >
-          <form onSubmit={handleSubmit} className="auth-form">
+          <form onSubmit={handleSubmit} className="auth-form" autoComplete="off">
             <h1 className="heading">WELCOME BACK</h1>
             
             <div className="inputGroup">
@@ -77,6 +71,7 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoComplete="off"
                 className="input"
               />
               <label htmlFor="email">Email Address</label>
@@ -89,6 +84,7 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autoComplete="new-password"
                 className="input"
               />
               <label htmlFor="password">Password</label>
