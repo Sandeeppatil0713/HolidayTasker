@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard, CheckSquare, Plane, Calendar, Search, PieChart, Settings, User, Menu, LogOut,
+  LayoutDashboard, CheckSquare, Plane, Calendar, Heart, PieChart, Settings, User, Menu, LogOut,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -16,12 +16,12 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 const navItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "My Tasks", url: "/dashboard/tasks", icon: CheckSquare },
-  { title: "Vacation Planner", url: "/dashboard/vacations", icon: Plane },
-  { title: "Calendar", url: "/dashboard/calendar", icon: Calendar },
-  { title: "Smart Search", url: "/dashboard/search", icon: Search },
-  { title: "Analytics", url: "/dashboard/analytics", icon: PieChart },
+  { title: "Dashboard",        url: "/dashboard",            icon: LayoutDashboard },
+  { title: "My Tasks",         url: "/dashboard/tasks",      icon: CheckSquare },
+  { title: "Vacation Planner", url: "/dashboard/vacations",  icon: Plane },
+  { title: "Calendar",         url: "/dashboard/calendar",   icon: Calendar },
+  { title: "Favourite Places", url: "/dashboard/favourites", icon: Heart },
+  { title: "Analytics",        url: "/dashboard/analytics",  icon: PieChart },
 ];
 
 const bottomItems = [
