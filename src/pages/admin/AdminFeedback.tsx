@@ -35,21 +35,21 @@ export default function AdminFeedback() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold font-heading heading-gradient">Feedback & Support</h1>
-        <p className="text-sm text-white/50 mt-1">{items.filter(f => f.status === "open").length} open tickets</p>
+        <p className="text-sm text-muted-foreground mt-1">{items.filter(f => f.status === "open").length} open tickets</p>
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-48">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
           <Input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search feedback..."
-            className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/30" />
+            className="pl-10 bg-muted/40 border-border text-white placeholder:text-muted-foreground/60" />
         </div>
         <div className="flex gap-2">
           {["all","open","resolved","bug","suggestion","complaint"].map(f => (
             <button key={f} onClick={() => setFilter(f)}
               className={`text-xs px-3 py-1.5 rounded-full font-medium capitalize transition-all
-                ${filter === f ? "bg-primary text-white" : "bg-white/5 text-white/50 hover:bg-white/10"}`}>
+                ${filter === f ? "bg-primary text-white" : "bg-muted/40 text-muted-foreground hover:bg-muted"}`}>
               {f}
             </button>
           ))}
@@ -60,7 +60,7 @@ export default function AdminFeedback() {
       <div className="space-y-3">
         {filtered.map((f, i) => (
           <motion.div key={f.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-            className="rounded-xl bg-white/5 border border-white/10 p-5">
+            className="rounded-xl bg-muted/40 border border-border p-5">
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
@@ -68,7 +68,7 @@ export default function AdminFeedback() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-white">{f.user}</p>
-                  <p className="text-xs text-white/40">{f.email}</p>
+                  <p className="text-xs text-muted-foreground">{f.email}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 flex-wrap">
@@ -77,10 +77,10 @@ export default function AdminFeedback() {
                   ${f.status === "open" ? "bg-yellow-400/10 text-yellow-400" : "bg-emerald-400/10 text-emerald-400"}`}>
                   {f.status}
                 </span>
-                <span className="text-xs text-white/30">{f.time}</span>
+                <span className="text-xs text-muted-foreground/60">{f.time}</span>
               </div>
             </div>
-            <p className="text-sm text-white/60 mt-3 leading-relaxed">{f.message}</p>
+            <p className="text-sm text-muted-foreground mt-3 leading-relaxed">{f.message}</p>
             <div className="flex items-center justify-between mt-3">
               <div className="flex gap-0.5">
                 {[1,2,3,4,5].map(s => (
@@ -89,7 +89,7 @@ export default function AdminFeedback() {
               </div>
               {f.status === "open" && (
                 <Button size="sm" variant="outline" onClick={() => resolve(f.id)}
-                  className="text-xs border-white/10 text-white/60 hover:text-white hover:bg-white/10">
+                  className="text-xs border-border text-muted-foreground hover:text-white hover:bg-muted">
                   <CheckCircle2 className="h-3.5 w-3.5 mr-1" /> Mark Resolved
                 </Button>
               )}
@@ -100,3 +100,4 @@ export default function AdminFeedback() {
     </div>
   );
 }
+

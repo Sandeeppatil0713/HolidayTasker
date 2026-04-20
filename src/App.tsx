@@ -13,7 +13,6 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminNotifications from "./pages/admin/AdminNotifications";
-import AdminFeedback from "./pages/admin/AdminFeedback";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminProfile from "./pages/admin/AdminProfile";
 import LandingPage from "./pages/LandingPage";
@@ -46,7 +45,7 @@ const App = () => (
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
-              <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout><DashboardHome /></DashboardLayout></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout><TasksPage /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/tasks" element={<ProtectedRoute><DashboardLayout><TasksPage /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/vacations" element={<ProtectedRoute><DashboardLayout><VacationsPage /></DashboardLayout></ProtectedRoute>} />
               <Route path="/dashboard/analytics" element={<ProtectedRoute><DashboardLayout><AnalyticsPage /></DashboardLayout></ProtectedRoute>} />
@@ -60,7 +59,6 @@ const App = () => (
               <Route path="/admin/users" element={<AdminRoute><AdminLayout><AdminUsers /></AdminLayout></AdminRoute>} />
               <Route path="/admin/analytics" element={<AdminRoute><AdminLayout><AdminAnalytics /></AdminLayout></AdminRoute>} />
               <Route path="/admin/notifications" element={<AdminRoute><AdminLayout><AdminNotifications /></AdminLayout></AdminRoute>} />
-              <Route path="/admin/feedback" element={<AdminRoute><AdminLayout><AdminFeedback /></AdminLayout></AdminRoute>} />
               <Route path="/admin/settings" element={<AdminRoute><AdminLayout><AdminSettings /></AdminLayout></AdminRoute>} />
               <Route path="/admin/profile" element={<AdminRoute><AdminLayout><AdminProfile /></AdminLayout></AdminRoute>} />
               <Route path="*" element={<NotFound />} />

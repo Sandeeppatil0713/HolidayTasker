@@ -9,6 +9,7 @@ export interface Task {
   priority: string;
   start_date: string | null;
   due_date: string | null;
+  completed_at: string | null;
   created_at: string;
 }
 
@@ -38,7 +39,7 @@ export const tasksService = {
   async toggleTask(id: string, done: boolean): Promise<void> {
     const { error } = await supabase
       .from('tasks')
-      .update({ done })
+      .update({ done, completed_at: done ? new Date().toISOString() : null })
       .eq('id', id);
     if (error) throw error;
   },
@@ -47,6 +48,14 @@ export const tasksService = {
     const { error } = await supabase
       .from('tasks')
       .delete()
+      .eq('id', id);
+    if (error) throw error;
+  },
+
+  async updateTask(id: string, updates: Partial<Pick<Task, 'title' | 'category' | 'priority' | 'start_date' | 'due_date'>>): Promise<void> {
+    const { error } = await supabase
+      .from('tasks')
+      .update(updates)
       .eq('id', id);
     if (error) throw error;
   },

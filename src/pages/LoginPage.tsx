@@ -27,10 +27,11 @@ const LoginPage = () => {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Success", description: "Welcome back!" });
-      // Admin redirect — commented out for now
-      // const ADMIN_EMAILS = ['rocksandeep0713@gmail.com','jdsammed108@gmail.com','shubhamranjanagi16@gmail.com'];
-      // navigate(ADMIN_EMAILS.includes(email.toLowerCase()) ? "/admin" : "/dashboard");
-      navigate("/dashboard");
+      // Check role from Supabase user metadata
+      const { data: { user: loggedInUser } } = await import("@/lib/supabase").then(m => m.supabase.auth.getUser());
+      const role = loggedInUser?.user_metadata?.role;
+      const isAdminEmail = email.toLowerCase() === 'admin@gmail.com';
+      navigate(role === 'admin' || isAdminEmail ? "/admin" : "/dashboard");
     }
 
     setLoading(false);

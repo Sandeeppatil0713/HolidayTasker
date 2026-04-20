@@ -42,41 +42,41 @@ export default function AdminProfile() {
     <div className="space-y-6 max-w-xl">
       <div>
         <h1 className="text-2xl font-bold font-heading heading-gradient">Admin Profile</h1>
-        <p className="text-sm text-white/50 mt-1">Manage your admin account</p>
+        <p className="text-sm text-muted-foreground mt-1">Manage your admin account</p>
       </div>
 
       {/* Avatar */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl bg-white/5 border border-white/10 p-6 flex items-center gap-5">
+        className="rounded-xl bg-muted/40 border border-border p-6 flex items-center gap-5">
         <div className="h-20 w-20 rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary/30 shrink-0">
           <span className="text-2xl font-bold font-heading text-primary">{initials}</span>
         </div>
         <div>
           <h2 className="text-lg font-bold text-white">{name || "Admin"}</h2>
-          <p className="text-sm text-white/50">{user?.email}</p>
+          <p className="text-sm text-muted-foreground">{user?.email}</p>
           <div className="flex items-center gap-2 mt-2">
             <span className="text-xs px-2.5 py-1 rounded-full bg-primary/20 text-primary border border-primary/30 font-medium flex items-center gap-1">
               <Shield className="h-3 w-3" /> Admin
             </span>
-            <span className="text-xs text-white/30">Since {createdAt}</span>
+            <span className="text-xs text-muted-foreground/60">Since {createdAt}</span>
           </div>
         </div>
       </motion.div>
 
       {/* Edit info */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
-        className="rounded-xl bg-white/5 border border-white/10 p-6 space-y-4">
+        className="rounded-xl bg-muted/40 border border-border p-6 space-y-4">
         <h3 className="text-sm font-semibold text-white flex items-center gap-2">
           <User className="h-4 w-4 text-primary" /> Account Info
         </h3>
         <div className="space-y-1">
-          <label className="text-xs text-white/40">Full Name</label>
+          <label className="text-xs text-muted-foreground">Full Name</label>
           <Input value={name} onChange={e => setName(e.target.value)}
-            className="bg-white/5 border-white/10 text-white placeholder:text-white/30" />
+            className="bg-muted/40 border-border text-white placeholder:text-muted-foreground/60" />
         </div>
         <div className="space-y-1">
-          <label className="text-xs text-white/40">Email Address</label>
-          <div className="flex items-center gap-2 h-10 px-3 rounded-md border border-white/10 bg-white/5 text-sm text-white/40">
+          <label className="text-xs text-muted-foreground">Email Address</label>
+          <div className="flex items-center gap-2 h-10 px-3 rounded-md border border-border bg-muted/40 text-sm text-muted-foreground">
             <Mail className="h-4 w-4 shrink-0" />
             <span>{user?.email}</span>
           </div>
@@ -88,31 +88,31 @@ export default function AdminProfile() {
 
       {/* Change password */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}
-        className="rounded-xl bg-white/5 border border-white/10 p-6 space-y-4">
+        className="rounded-xl bg-muted/40 border border-border p-6 space-y-4">
         <h3 className="text-sm font-semibold text-white flex items-center gap-2">
           <Lock className="h-4 w-4 text-primary" /> Change Password
         </h3>
         <div className="grid sm:grid-cols-2 gap-3">
           <div className="space-y-1">
-            <label className="text-xs text-white/40">New Password</label>
+            <label className="text-xs text-muted-foreground">New Password</label>
             <Input type="password" value={newPw} onChange={e => setNewPw(e.target.value)} placeholder="Min 6 characters"
-              className="bg-white/5 border-white/10 text-white placeholder:text-white/30" />
+              className="bg-muted/40 border-border text-white placeholder:text-muted-foreground/60" />
           </div>
           <div className="space-y-1">
-            <label className="text-xs text-white/40">Confirm Password</label>
+            <label className="text-xs text-muted-foreground">Confirm Password</label>
             <Input type="password" value={confirmPw} onChange={e => setConfirmPw(e.target.value)} placeholder="Repeat"
-              className="bg-white/5 border-white/10 text-white placeholder:text-white/30" />
+              className="bg-muted/40 border-border text-white placeholder:text-muted-foreground/60" />
           </div>
         </div>
         <Button size="sm" variant="outline" onClick={handleChangePw} disabled={!newPw}
-          className="border-white/10 text-white/60 hover:text-white hover:bg-white/10">
+          className="border-border text-muted-foreground hover:text-white hover:bg-muted">
           Update Password
         </Button>
       </motion.div>
 
       {/* Logout */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
-        className="rounded-xl bg-white/5 border border-white/10 p-5">
+        className="rounded-xl bg-muted/40 border border-border p-5">
         <Button variant="destructive" size="sm" onClick={async () => { await signOut(); navigate("/"); }} className="gap-2">
           <LogOut className="h-4 w-4" /> Sign Out
         </Button>
@@ -120,3 +120,4 @@ export default function AdminProfile() {
     </div>
   );
 }
+

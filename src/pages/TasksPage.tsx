@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, Flag, Sparkles, PartyPopper } from "lucide-react";
+import { Plus, Trash2, Flag, Sparkles, PartyPopper, Edit3, X, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -36,6 +36,12 @@ const TasksPage = () => {
   const [newDueDate, setNewDueDate] = useState("");
   const [filter, setFilter] = useState("All");
   const [completedTask, setCompletedTask] = useState<Task | null>(null);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editCategory, setEditCategory] = useState("");
+  const [editPriority, setEditPriority] = useState("");
+  const [editStartDate, setEditStartDate] = useState("");
+  const [editDueDate, setEditDueDate] = useState("");
 
   useEffect(() => {
     if (!user) return;
@@ -87,6 +93,34 @@ const TasksPage = () => {
       await tasksService.deleteTask(id);
     } catch {
       toast({ title: "Error", description: "Failed to delete task", variant: "destructive" });
+    }
+  };
+
+  const openEdit = (task: Task) => {
+    setEditingTask(task);
+    setEditTitle(task.title);
+    setEditCategory(task.category);
+    setEditPriority(task.priority);
+    setEditStartDate(task.start_date || "");
+    setEditDueDate(task.due_date || "");
+  };
+
+  const saveEdit = async () => {
+    if (!editingTask || !editTitle.trim()) return;
+    const updates = {
+      title: editTitle,
+      category: editCategory,
+      priority: editPriority,
+      start_date: editStartDate || null,
+      due_date: editDueDate || null,
+    };
+    setTasks(prev => prev.map(t => t.id === editingTask.id ? { ...t, ...updates } : t));
+    setEditingTask(null);
+    try {
+      await tasksService.updateTask(editingTask.id, updates);
+      toast({ title: "Task updated" });
+    } catch {
+      toast({ title: "Error", description: "Failed to update task", variant: "destructive" });
     }
   };
 
@@ -186,11 +220,58 @@ const TasksPage = () => {
                 <button onClick={() => deleteTask(task.id)} className="opacity-0 group-hover:opacity-100 transition-opacity">
                   <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
                 </button>
+                <button onClick={() => openEdit(task)} className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Edit3 className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                </button>
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
       )}
+
+      {/* Edit Task Dialog */}
+      <Dialog open={!!editingTask} onOpenChange={() => setEditingTask(null)}>
+        <DialogContent className="max-w-md border-primary/30">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-base font-semibold font-heading text-foreground">Edit Task</h3>
+          </div>
+          <div className="space-y-3">
+            <Input value={editTitle} onChange={e => setEditTitle(e.target.value)} placeholder="Task title" />
+            <div className="flex gap-3">
+              <Select value={editCategory} onValueChange={setEditCategory}>
+                <SelectTrigger className="flex-1"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {["Work","Personal","Travel","Urgent"].map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <Select value={editPriority} onValueChange={setEditPriority}>
+                <SelectTrigger className="flex-1"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {["Low","Medium","High"].map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex gap-3">
+              <div className="flex-1 space-y-1">
+                <label className="text-xs text-muted-foreground">Start Date</label>
+                <Input type="date" value={editStartDate} onChange={e => setEditStartDate(e.target.value)} />
+              </div>
+              <div className="flex-1 space-y-1">
+                <label className="text-xs text-muted-foreground">Due Date</label>
+                <Input type="date" value={editDueDate} onChange={e => setEditDueDate(e.target.value)} />
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-3 mt-4">
+            <Button variant="outline" onClick={() => setEditingTask(null)} className="flex-1">
+              <X className="h-4 w-4 mr-1" /> Cancel
+            </Button>
+            <Button onClick={saveEdit} className="flex-1">
+              <Save className="h-4 w-4 mr-1" /> Save
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Completion Pop-up */}
       <Dialog open={!!completedTask} onOpenChange={() => setCompletedTask(null)}>
