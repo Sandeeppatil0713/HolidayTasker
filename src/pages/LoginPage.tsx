@@ -27,8 +27,17 @@ const LoginPage = () => {
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
+<<<<<<< HEAD
       toast({ title: "Welcome back!", description: "Signed in successfully." });
       navigate(isAdminEmail(email) ? "/admin" : "/dashboard");
+=======
+      toast({ title: "Success", description: "Welcome back!" });
+      // Check role from Supabase user metadata
+      const { data: { user: loggedInUser } } = await import("@/lib/supabase").then(m => m.supabase.auth.getUser());
+      const role = loggedInUser?.user_metadata?.role;
+      const isAdminEmail = email.toLowerCase() === 'admin@gmail.com';
+      navigate(role === 'admin' || isAdminEmail ? "/admin" : "/dashboard");
+>>>>>>> main
     }
 
     setLoading(false);

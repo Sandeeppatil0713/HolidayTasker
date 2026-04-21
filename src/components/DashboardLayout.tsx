@@ -1,7 +1,11 @@
 import { ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+<<<<<<< HEAD
   LayoutDashboard, CheckSquare, Plane, Calendar, Heart, PieChart, Settings, User, Menu, LogOut,
+=======
+  CheckSquare, Plane, Calendar, Heart, PieChart, Settings, User, Menu, LogOut,
+>>>>>>> main
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -16,7 +20,10 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 const navItems = [
+<<<<<<< HEAD
   { title: "Dashboard",        url: "/dashboard",            icon: LayoutDashboard },
+=======
+>>>>>>> main
   { title: "My Tasks",         url: "/dashboard/tasks",      icon: CheckSquare },
   { title: "Vacation Planner", url: "/dashboard/vacations",  icon: Plane },
   { title: "Calendar",         url: "/dashboard/calendar",   icon: Calendar },

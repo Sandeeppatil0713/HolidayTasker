@@ -1,5 +1,8 @@
 import { supabase } from '@/lib/supabase';
 
+// Table name matches your Supabase table
+const TABLE = 'user taskmanagment';
+
 export interface Task {
   id: string;
   user_id: string;
@@ -9,6 +12,7 @@ export interface Task {
   priority: string;
   start_date: string | null;
   due_date: string | null;
+  completed_at: string | null;
   created_at: string;
 }
 
@@ -17,7 +21,7 @@ export type NewTask = Omit<Task, 'id' | 'user_id' | 'created_at'>;
 export const tasksService = {
   async fetchTasks(userId: string): Promise<Task[]> {
     const { data, error } = await supabase
-      .from('tasks')
+      .from(TABLE)
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
@@ -27,8 +31,8 @@ export const tasksService = {
 
   async createTask(userId: string, task: Omit<NewTask, 'done'>): Promise<Task> {
     const { data, error } = await supabase
-      .from('tasks')
-      .insert([{ ...task, user_id: userId, done: false }])
+      .from(TABLE)
+      .insert([{ ...task, user_id: userId, done: false, completed_at: null }])
       .select()
       .single();
     if (error) throw error;
@@ -37,16 +41,24 @@ export const tasksService = {
 
   async toggleTask(id: string, done: boolean): Promise<void> {
     const { error } = await supabase
-      .from('tasks')
-      .update({ done })
+      .from(TABLE)
+      .update({ done, completed_at: done ? new Date().toISOString() : null })
       .eq('id', id);
     if (error) throw error;
   },
 
   async deleteTask(id: string): Promise<void> {
     const { error } = await supabase
-      .from('tasks')
+      .from(TABLE)
       .delete()
+      .eq('id', id);
+    if (error) throw error;
+  },
+
+  async updateTask(id: string, updates: Partial<Pick<Task, 'title' | 'category' | 'priority' | 'start_date' | 'due_date'>>): Promise<void> {
+    const { error } = await supabase
+      .from(TABLE)
+      .update(updates)
       .eq('id', id);
     if (error) throw error;
   },
