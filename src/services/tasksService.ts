@@ -13,7 +13,7 @@ export interface Task {
   created_at: string;
 }
 
-export type NewTask = Omit<Task, 'id' | 'user_id' | 'created_at'>;
+export type NewTask = Omit<Task, 'id' | 'user_id' | 'created_at' | 'completed_at'>;
 
 export const tasksService = {
   async fetchTasks(userId: string): Promise<Task[]> {
