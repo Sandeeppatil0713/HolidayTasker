@@ -59,4 +59,12 @@ export const tasksService = {
       .eq('id', id);
     if (error) throw error;
   },
+
+  async clearAllTasks(userId: string): Promise<void> {
+    const { error } = await supabase
+      .from('tasks')
+      .delete()
+      .eq('user_id', userId);
+    if (error) throw error;
+  },
 };

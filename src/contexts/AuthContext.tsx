@@ -14,6 +14,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string, username: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -59,8 +60,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => { await supabase.auth.signOut(); };
 
+  const deleteAccount = async (): Promise<{ error: any }> => {
+    const { error } = await supabase.rpc('delete_user');
+    if (!error) {
+      // Sign out to invalidate the session token
+      await supabase.auth.signOut();
+      // Wipe every trace of the user locally so they're treated as brand new
+      localStorage.clear();
+      sessionStorage.clear();
+      // Clear any supabase auth cookies/keys specifically
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith('sb-')) localStorage.removeItem(key);
+      });
+    }
+    return { error };
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, isAdmin, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, isAdmin, signIn, signUp, signOut, deleteAccount }}>
       {loading ? (
         <div className="min-h-screen flex items-center justify-center bg-background">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent" />

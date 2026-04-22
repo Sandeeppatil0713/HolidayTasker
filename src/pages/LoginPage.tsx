@@ -91,6 +91,12 @@ const LoginPage = () => {
               <label htmlFor="password">Password</label>
             </div>
 
+            <div className="text-right -mt-1 mb-1">
+              <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+                Forgot password?
+              </Link>
+            </div>
+
             <button
               type="submit"
               className="btn"

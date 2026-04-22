@@ -14,24 +14,26 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 
 const navItems = [
-  { title: "My Tasks",         url: "/dashboard/tasks",      icon: CheckSquare },
-  { title: "Vacation Planner", url: "/dashboard/vacations",  icon: Plane },
-  { title: "Calendar",         url: "/dashboard/calendar",   icon: Calendar },
-  { title: "Favourite Places", url: "/dashboard/favourites", icon: Heart },
-  { title: "Analytics",        url: "/dashboard/analytics",  icon: PieChart },
+  { titleKey: "tasks",      url: "/dashboard/tasks",      icon: CheckSquare },
+  { titleKey: "vacations",  url: "/dashboard/vacations",  icon: Plane },
+  { titleKey: "calendar",   url: "/dashboard/calendar",   icon: Calendar },
+  { titleKey: "favourites", url: "/dashboard/favourites", icon: Heart },
+  { titleKey: "analytics",  url: "/dashboard/analytics",  icon: PieChart },
 ];
 
 const bottomItems = [
-  { title: "Settings", url: "/dashboard/settings", icon: Settings },
-  { title: "Profile", url: "/dashboard/profile", icon: User },
+  { titleKey: "settings", url: "/dashboard/settings", icon: Settings },
+  { titleKey: "profile",  url: "/dashboard/profile",  icon: User },
 ];
 
 function AppSidebar() {
   const { state, setOpenMobile, isMobile } = useSidebar();
   const collapsed = state === "collapsed";
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   const handleNavClick = () => {
     if (isMobile) setOpenMobile(false);
@@ -50,8 +52,13 @@ function AppSidebar() {
       {!collapsed && user && (
         <div className="px-4 py-3 border-b border-sidebar-border">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              <User className="h-5 w-5 text-primary" />
+            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden border-2 border-primary/20">
+              {user.user_metadata?.avatar_url
+                ? <img src={user.user_metadata.avatar_url} alt="avatar" className="h-full w-full object-cover" />
+                : <span className="text-sm font-bold text-primary">
+                    {(user.user_metadata?.username?.[0] ?? user.email?.[0] ?? "U").toUpperCase()}
+                  </span>
+              }
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-foreground truncate">
@@ -70,11 +77,11 @@ function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.titleKey}>
                   <SidebarMenuButton asChild>
                     <NavLink to={item.url} end onClick={handleNavClick} className="hover:bg-sidebar-accent rounded-lg transition-colors" activeClassName="bg-sidebar-accent text-sidebar-primary font-medium">
                       <item.icon className="mr-2 h-4 w-4 shrink-0" />
-                      {!collapsed && <span>{item.title}</span>}
+                      {!collapsed && <span>{t(item.titleKey)}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -87,11 +94,11 @@ function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {bottomItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.titleKey}>
                   <SidebarMenuButton asChild>
                     <NavLink to={item.url} end onClick={handleNavClick} className="hover:bg-sidebar-accent rounded-lg transition-colors" activeClassName="bg-sidebar-accent text-sidebar-primary font-medium">
                       <item.icon className="mr-2 h-4 w-4 shrink-0" />
-                      {!collapsed && <span>{item.title}</span>}
+                      {!collapsed && <span>{t(item.titleKey)}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -108,6 +115,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const handleSignOut = async () => {
     await signOut();
@@ -132,7 +140,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
             {/* Right: welcome + actions */}
             <div className="flex items-center gap-2">
               <h2 className="hidden md:block text-sm font-medium text-muted-foreground mr-1">
-                Welcome back, <span className="text-foreground font-semibold">{user?.user_metadata?.username?.split(' ')[0]}</span> 👋
+                {t("welcomeBack")}, <span className="text-foreground font-semibold">{user?.user_metadata?.username?.split(' ')[0]}</span> 👋
               </h2>
               <NotificationBell />
               <ThemeToggle />

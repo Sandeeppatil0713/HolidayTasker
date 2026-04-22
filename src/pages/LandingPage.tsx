@@ -64,7 +64,6 @@ const LandingPage = () => {
           <div className="hidden md:flex items-center gap-1">
             <a href="#features" className="px-4 py-1.5 text-sm font-nav text-muted-foreground hover:text-foreground transition-colors rounded-full hover:bg-muted/60">Features</a>
             <a href="#testimonials" className="px-4 py-1.5 text-sm font-nav text-muted-foreground hover:text-foreground transition-colors rounded-full hover:bg-muted/60">Testimonials</a>
-            <a href="#" className="px-4 py-1.5 text-sm font-nav text-muted-foreground hover:text-foreground transition-colors rounded-full hover:bg-muted/60">Pricing</a>
           </div>
 
           {/* Right actions */}
