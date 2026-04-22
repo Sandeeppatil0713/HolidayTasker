@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { User, Mail, Shield, Lock, Save, LogOut } from "lucide-react";
+import { User, Mail, Shield, Save, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,8 +14,6 @@ export default function AdminProfile() {
   const navigate = useNavigate();
 
   const [name,      setName]      = useState(user?.user_metadata?.username || "");
-  const [newPw,     setNewPw]     = useState("");
-  const [confirmPw, setConfirmPw] = useState("");
   const [saving,    setSaving]    = useState(false);
 
   const handleSave = async () => {
@@ -24,15 +22,6 @@ export default function AdminProfile() {
     setSaving(false);
     if (error) { toast({ title: "Failed", variant: "destructive" }); return; }
     toast({ title: "Profile updated" });
-  };
-
-  const handleChangePw = async () => {
-    if (newPw !== confirmPw) { toast({ title: "Passwords don't match", variant: "destructive" }); return; }
-    if (newPw.length < 6)   { toast({ title: "Min 6 characters", variant: "destructive" }); return; }
-    const { error } = await supabase.auth.updateUser({ password: newPw });
-    if (error) { toast({ title: "Failed", variant: "destructive" }); return; }
-    toast({ title: "Password updated" });
-    setNewPw(""); setConfirmPw("");
   };
 
   const initials = name ? name.split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2) : "A";
@@ -83,30 +72,6 @@ export default function AdminProfile() {
         </div>
         <Button size="sm" onClick={handleSave} disabled={saving} className="gap-2">
           <Save className="h-4 w-4" />{saving ? "Saving..." : "Save Changes"}
-        </Button>
-      </motion.div>
-
-      {/* Change password */}
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}
-        className="rounded-xl bg-muted/40 border border-border p-6 space-y-4">
-        <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-          <Lock className="h-4 w-4 text-primary" /> Change Password
-        </h3>
-        <div className="grid sm:grid-cols-2 gap-3">
-          <div className="space-y-1">
-            <label className="text-xs text-muted-foreground">New Password</label>
-            <Input type="password" value={newPw} onChange={e => setNewPw(e.target.value)} placeholder="Min 6 characters"
-              className="bg-muted/40 border-border text-white placeholder:text-muted-foreground/60" />
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs text-muted-foreground">Confirm Password</label>
-            <Input type="password" value={confirmPw} onChange={e => setConfirmPw(e.target.value)} placeholder="Repeat"
-              className="bg-muted/40 border-border text-white placeholder:text-muted-foreground/60" />
-          </div>
-        </div>
-        <Button size="sm" variant="outline" onClick={handleChangePw} disabled={!newPw}
-          className="border-border text-muted-foreground hover:text-white hover:bg-muted">
-          Update Password
         </Button>
       </motion.div>
 

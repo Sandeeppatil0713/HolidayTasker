@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import {
-  User, Mail, Phone, MapPin, Shield, Bell, Palette, Camera,
-  CheckCircle2, Plane, ListTodo, Bookmark, Lock, Trash2,
-  Save, Edit3, LogOut, Sun, Moon, ToggleLeft, ToggleRight,
+  User, Mail, Phone, MapPin,
+  CheckCircle2, Plane, ListTodo, Bookmark, Trash2,
+  Save, Edit3, LogOut, Camera,
   Calendar, Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,9 +12,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "@/contexts/ThemeContext";
-
-const TRAVEL_CATEGORIES = ["Beach", "Hill Station", "City", "Adventure", "Cultural", "Wildlife", "Cruise"];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -25,7 +22,6 @@ export default function ProfilePage() {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { theme, setTheme } = useTheme();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [editing, setEditing] = useState(false);
@@ -36,16 +32,6 @@ export default function ProfilePage() {
   const [fullName, setFullName] = useState(user?.user_metadata?.username || "");
   const [phone, setPhone] = useState(user?.user_metadata?.phone || "");
   const [location, setLocation] = useState(user?.user_metadata?.location || "");
-
-  // Preferences
-  const [taskReminders, setTaskReminders] = useState(true);
-  const [vacationAlerts, setVacationAlerts] = useState(true);
-  const [travelCats, setTravelCats] = useState<string[]>(["Beach", "City"]);
-
-  // Security
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [changingPw, setChangingPw] = useState(false);
 
   // Stats
   const [stats, setStats] = useState({ total: 0, completed: 0, upcoming: 0 });
@@ -71,18 +57,6 @@ export default function ProfilePage() {
   const toggleTravelCat = (cat: string) =>
     setTravelCats((prev) => prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]);
 
-  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
-    const ext = file.name.split(".").pop();
-    const path = `avatars/${user.id}.${ext}`;
-    const { error } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
-    if (error) { toast({ title: "Upload failed", variant: "destructive" }); return; }
-    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-    setAvatarUrl(data.publicUrl);
-    toast({ title: "Avatar updated" });
-  };
-
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
@@ -95,19 +69,16 @@ export default function ProfilePage() {
     setEditing(false);
   };
 
-  const handleChangePassword = async () => {
-    if (newPassword !== confirmPassword) {
-      toast({ title: "Passwords don't match", variant: "destructive" }); return;
-    }
-    if (newPassword.length < 6) {
-      toast({ title: "Password too short", variant: "destructive" }); return;
-    }
-    setChangingPw(true);
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
-    setChangingPw(false);
-    if (error) { toast({ title: "Failed", description: error.message, variant: "destructive" }); return; }
-    toast({ title: "Password updated" });
-    setNewPassword(""); setConfirmPassword("");
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    const ext = file.name.split(".").pop();
+    const path = `avatars/${user.id}.${ext}`;
+    const { error } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+    if (error) { toast({ title: "Upload failed", variant: "destructive" }); return; }
+    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+    setAvatarUrl(data.publicUrl);
+    toast({ title: "Avatar updated" });
   };
 
   const handleDeleteAccount = async () => {
@@ -275,92 +246,8 @@ export default function ProfilePage() {
             </div>
           </motion.div>
 
-          {/* Preferences */}
-          <motion.div custom={4} variants={fadeUp} initial="hidden" animate="visible"
-            className="rounded-xl card-glass p-6">
-            <h3 className="text-sm font-semibold font-heading text-foreground mb-4 flex items-center gap-2">
-              <Palette className="h-4 w-4 text-primary" /> Preferences
-            </h3>
-
-            {/* Theme */}
-            <div className="mb-4">
-              <p className="text-xs text-muted-foreground mb-2">Theme</p>
-              <div className="flex gap-3">
-                {[
-                  { value: "light", label: "Light", icon: Sun },
-                  { value: "dark", label: "Dark", icon: Moon },
-                ].map(({ value, label, icon: Icon }) => (
-                  <button key={value} onClick={() => setTheme(value as "light" | "dark")}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-all ${theme === value ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}>
-                    <Icon className="h-4 w-4" /> {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Notifications */}
-            <div className="mb-4">
-              <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1"><Bell className="h-3.5 w-3.5" /> Notifications</p>
-              <div className="space-y-2">
-                {[
-                  { label: "Task Reminders", value: taskReminders, set: setTaskReminders },
-                  { label: "Vacation Alerts", value: vacationAlerts, set: setVacationAlerts },
-                ].map(({ label, value, set }) => (
-                  <div key={label} className="flex items-center justify-between rounded-lg bg-muted/40 px-4 py-2.5">
-                    <span className="text-sm text-foreground">{label}</span>
-                    <button onClick={() => set(!value)} className="transition-transform hover:scale-110">
-                      {value
-                        ? <ToggleRight className="h-6 w-6 text-primary" />
-                        : <ToggleLeft className="h-6 w-6 text-muted-foreground" />}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Travel Categories */}
-            <div>
-              <p className="text-xs text-muted-foreground mb-2 flex items-center gap-1"><Plane className="h-3.5 w-3.5" /> Preferred Travel Categories</p>
-              <div className="flex flex-wrap gap-2">
-                {TRAVEL_CATEGORIES.map((cat) => (
-                  <button key={cat} onClick={() => toggleTravelCat(cat)}
-                    className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-all ${travelCats.includes(cat) ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}>
-                    {cat}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Security */}
-          <motion.div custom={5} variants={fadeUp} initial="hidden" animate="visible"
-            className="rounded-xl card-glass p-6">
-            <h3 className="text-sm font-semibold font-heading text-foreground mb-4 flex items-center gap-2">
-              <Shield className="h-4 w-4 text-primary" /> Security
-            </h3>
-            <div className="grid sm:grid-cols-2 gap-4 mb-4">
-              <div className="space-y-1">
-                <label className="text-xs text-muted-foreground">New Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min 6 characters" className="pl-9" />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs text-muted-foreground">Confirm Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Repeat password" className="pl-9" />
-                </div>
-              </div>
-            </div>
-            <Button size="sm" variant="outline" onClick={handleChangePassword} disabled={changingPw || !newPassword}>
-              <Lock className="h-4 w-4 mr-1" />{changingPw ? "Updating..." : "Update Password"}
-            </Button>
-          </motion.div>
-
           {/* Danger zone */}
-          <motion.div custom={6} variants={fadeUp} initial="hidden" animate="visible"
+          <motion.div custom={4} variants={fadeUp} initial="hidden" animate="visible"
             className="rounded-xl card-glass p-6">
             <h3 className="text-sm font-semibold font-heading text-foreground mb-4">Actions</h3>
             <div className="flex flex-wrap gap-3">

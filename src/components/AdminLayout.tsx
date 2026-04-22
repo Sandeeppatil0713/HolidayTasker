@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard, Users, BarChart3, Bell,
+  Users, BarChart3, Bell,
   Settings, User, LogOut, Shield,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,7 +9,6 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { useToast } from "@/hooks/use-toast";
 
 const navItems = [
-  { title: "Dashboard",     url: "/admin",              icon: LayoutDashboard },
   { title: "Users",         url: "/admin/users",         icon: Users },
   { title: "Analytics",     url: "/admin/analytics",     icon: BarChart3 },
   { title: "Notifications", url: "/admin/notifications", icon: Bell },

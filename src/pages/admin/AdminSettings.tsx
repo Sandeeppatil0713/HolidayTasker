@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Settings, Globe, Bell, Shield, Database, ToggleLeft, ToggleRight, Save } from "lucide-react";
+import { Settings, Bell, ToggleLeft, ToggleRight, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 function Toggle({ value, onChange }: { value: boolean; onChange: () => void }) {
@@ -15,15 +14,9 @@ function Toggle({ value, onChange }: { value: boolean; onChange: () => void }) {
 
 export default function AdminSettings() {
   const { toast } = useToast();
-  const [appName,       setAppName]       = useState("Holiday Tasker");
   const [maintenance,   setMaintenance]   = useState(false);
-  const [registration,  setRegistration]  = useState(true);
   const [emailNotif,    setEmailNotif]    = useState(true);
   const [pushNotif,     setPushNotif]     = useState(false);
-  const [twoFA,         setTwoFA]         = useState(false);
-  const [auditLog,      setAuditLog]      = useState(true);
-  const [autoBackup,    setAutoBackup]    = useState(true);
-  const [maxUsers,      setMaxUsers]      = useState("1000");
 
   const save = () => toast({ title: "Settings saved" });
 
@@ -60,19 +53,8 @@ export default function AdminSettings() {
       </div>
 
       <Section title="General" icon={Settings}>
-        <Row label="App Name" desc="Displayed across the platform">
-          <Input value={appName} onChange={e => setAppName(e.target.value)}
-            className="w-48 bg-muted/40 border-border text-white text-sm h-8" />
-        </Row>
         <Row label="Maintenance Mode" desc="Disable access for regular users">
           <Toggle value={maintenance} onChange={() => setMaintenance(p => !p)} />
-        </Row>
-        <Row label="User Registration" desc="Allow new users to sign up">
-          <Toggle value={registration} onChange={() => setRegistration(p => !p)} />
-        </Row>
-        <Row label="Max Users" desc="Maximum allowed registered users">
-          <Input value={maxUsers} onChange={e => setMaxUsers(e.target.value)}
-            className="w-24 bg-muted/40 border-border text-white text-sm h-8" type="number" />
         </Row>
       </Section>
 
@@ -82,27 +64,6 @@ export default function AdminSettings() {
         </Row>
         <Row label="Push Notifications" desc="Browser push alerts">
           <Toggle value={pushNotif} onChange={() => setPushNotif(p => !p)} />
-        </Row>
-      </Section>
-
-      <Section title="Security" icon={Shield}>
-        <Row label="Two-Factor Authentication" desc="Require 2FA for all users">
-          <Toggle value={twoFA} onChange={() => setTwoFA(p => !p)} />
-        </Row>
-        <Row label="Audit Logging" desc="Log all admin actions">
-          <Toggle value={auditLog} onChange={() => setAuditLog(p => !p)} />
-        </Row>
-      </Section>
-
-      <Section title="Data & Backup" icon={Database}>
-        <Row label="Auto Backup" desc="Daily automated database backup">
-          <Toggle value={autoBackup} onChange={() => setAutoBackup(p => !p)} />
-        </Row>
-        <Row label="Export Data" desc="Download all platform data as CSV">
-          <Button size="sm" variant="outline"
-            className="text-xs border-border text-muted-foreground hover:text-white hover:bg-muted">
-            Export
-          </Button>
         </Row>
       </Section>
     </div>
