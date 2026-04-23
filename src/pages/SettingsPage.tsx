@@ -160,54 +160,81 @@ export default function SettingsPage() {
 
   // ── Notification helpers ──────────────────────────────────────────────────
   const doSendTaskReminder = async () => {
+    if (!userEmail) {
+      toast({ title: "No email address found", description: "Please add an email to your account.", variant: "destructive" });
+      return;
+    }
     setSending("task");
     try {
       const tasks  = await tasksService.fetchTasks(user!.id);
       const result = await sendTaskReminderEmail(userEmail, userName, tasks);
       if ((result as any).skipped) {
-        toast({ title: "No tasks due soon", description: "Nothing to remind you about right now." });
+        toast({ title: "No tasks due soon", description: "You have no tasks due today or tomorrow." });
       } else {
         toast({ title: "📧 Reminder sent!", description: `${(result as any).count} task(s) sent to ${userEmail}` });
       }
-    } catch { toast({ title: "Failed to send reminder", variant: "destructive" }); }
-    finally { setSending(null); }
+    } catch (err: any) {
+      toast({
+        title: "Failed to send reminder",
+        description: err?.message?.includes("Edge Function") || err?.message?.includes("FunctionsFetchError")
+          ? "Email service is not configured. Check your Supabase Edge Function deployment."
+          : (err?.message ?? "Something went wrong."),
+        variant: "destructive",
+      });
+    } finally { setSending(null); }
   };
 
   const doSendVacationAlert = async () => {
+    if (!userEmail) {
+      toast({ title: "No email address found", description: "Please add an email to your account.", variant: "destructive" });
+      return;
+    }
     setSending("vacation");
     try {
       await sendVacationAlertEmail(userEmail, userName, SAMPLE_TRIPS);
       toast({ title: "✈️ Vacation alert sent!", description: `Sent to ${userEmail}` });
-    } catch { toast({ title: "Failed to send vacation alert", variant: "destructive" }); }
-    finally { setSending(null); }
+    } catch (err: any) {
+      toast({
+        title: "Failed to send vacation alert",
+        description: err?.message?.includes("Edge Function") || err?.message?.includes("FunctionsFetchError")
+          ? "Email service is not configured. Check your Supabase Edge Function deployment."
+          : (err?.message ?? "Something went wrong."),
+        variant: "destructive",
+      });
+    } finally { setSending(null); }
   };
 
   const doSendEmailDigest = async () => {
+    if (!userEmail) {
+      toast({ title: "No email address found", description: "Please add an email to your account.", variant: "destructive" });
+      return;
+    }
     setSending("email");
     try {
       const tasks = await tasksService.fetchTasks(user!.id);
       await sendEmailDigest(userEmail, userName, tasks, SAMPLE_TRIPS);
       toast({ title: "📬 Digest sent!", description: `Sent to ${userEmail}` });
-    } catch { toast({ title: "Failed to send digest", variant: "destructive" }); }
-    finally { setSending(null); }
+    } catch (err: any) {
+      toast({
+        title: "Failed to send digest",
+        description: err?.message?.includes("Edge Function") || err?.message?.includes("FunctionsFetchError")
+          ? "Email service is not configured. Check your Supabase Edge Function deployment."
+          : (err?.message ?? "Something went wrong."),
+        variant: "destructive",
+      });
+    } finally { setSending(null); }
   };
 
-  const handleTaskReminderToggle = async () => {
-    const next = !taskReminder;
-    setTaskReminder(next);
-    if (next && allNotif && userEmail) await doSendTaskReminder();
+  const handleTaskReminderToggle = () => {
+    setTaskReminder(p => !p);
   };
 
-  const handleVacationToggle = async () => {
-    const next = !vacationNotif;
-    setVacationNotif(next);
-    if (next && allNotif && userEmail) await doSendVacationAlert();
+  const handleVacationToggle = () => {
+    setVacationNotif(p => !p);
   };
 
-  const handleEmailDigestToggle = async () => {
-    const next = !emailNotif;
-    setEmailNotif(next);
-    if (next && allNotif && userEmail) await doSendEmailDigest();
+  const handleEmailDigestToggle = () => {
+    setEmailNotif(p => !p);
   };
 
   // ── Danger zone ───────────────────────────────────────────────────────────
@@ -230,7 +257,18 @@ export default function SettingsPage() {
     setDeleteLoading(true);
     try {
       const { error } = await deleteAccount();
-      if (error) throw error;
+      if (error) {
+        const msg = error?.message ?? "";
+        const isRpcMissing = msg.includes("delete_user") || msg.includes("function") || msg.includes("rpc");
+        toast({
+          title: "Failed to delete account",
+          description: isRpcMissing
+            ? "The delete_user database function is not set up. Please contact support."
+            : msg || "Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
       toast({ title: "Account deleted", description: "Your account has been permanently removed." });
       navigate("/signup");
     } catch (err: any) {

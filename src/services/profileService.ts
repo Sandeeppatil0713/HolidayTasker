@@ -42,4 +42,26 @@ export const profileService = {
     // Cache bust so the new image shows immediately
     return { url: `${data.publicUrl}?t=${Date.now()}`, error: null };
   },
+
+  async deleteAvatar(userId: string, avatarUrl: string): Promise<{ error: any }> {
+    // Extract the storage path from the public URL (everything after "/avatars/")
+    const marker = "/avatars/";
+    const markerIndex = avatarUrl.indexOf(marker);
+    if (markerIndex === -1) return { error: new Error("Could not determine avatar path") };
+    // Strip query params (cache-bust suffix) before deleting
+    const pathWithQuery = avatarUrl.slice(markerIndex + marker.length);
+    const storagePath   = pathWithQuery.split("?")[0];
+
+    const { error: storageError } = await supabase.storage
+      .from("avatars")
+      .remove([storagePath]);
+    if (storageError) return { error: storageError };
+
+    // Clear avatar_url in profiles table
+    const { error: dbError } = await supabase
+      .from("profiles")
+      .update({ avatar_url: null, updated_at: new Date().toISOString() })
+      .eq("id", userId);
+    return { error: dbError };
+  },
 };

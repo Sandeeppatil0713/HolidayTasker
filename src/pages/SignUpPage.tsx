@@ -31,6 +31,57 @@ const SignupPage = () => {
       return;
     }
 
+    if (username.trim().length < 3) {
+      toast({
+        title: "Error",
+        description: "Username must be at least 3 characters",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (username.trim().length > 30) {
+      toast({
+        title: "Error",
+        description: "Username must be 30 characters or less",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate email format and block disposable/fake domains
+    const lowerEmail = email.toLowerCase();
+    const emailFormatRegex = /^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/;
+    if (!emailFormatRegex.test(lowerEmail)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const disposableDomains = [
+      "mailinator.com", "guerrillamail.com", "tempmail.com", "throwaway.email",
+      "fakeinbox.com", "sharklasers.com", "guerrillamailblock.com", "grr.la",
+      "guerrillamail.info", "spam4.me", "trashmail.com", "yopmail.com",
+      "maildrop.cc", "dispostable.com", "mailnull.com", "spamgourmet.com",
+      "trashmail.me", "discard.email", "spamfree24.org", "getairmail.com",
+      "filzmail.com", "throwam.com", "tempr.email", "dispostable.com",
+      "mailnesia.com", "spamgourmet.net", "spamgourmet.org", "trashmail.at",
+      "trashmail.io", "trashmail.xyz", "temp-mail.org", "tempinbox.com",
+    ];
+
+    const emailDomain = lowerEmail.split("@")[1];
+    if (disposableDomains.includes(emailDomain)) {
+      toast({
+        title: "Invalid Email",
+        description: "Disposable or temporary email addresses are not allowed",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast({
         title: "Error",

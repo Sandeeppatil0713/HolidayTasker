@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   User, Mail, Phone, MapPin, FileText,
   CheckCircle2, Plane, ListTodo, Bookmark,
-  Save, Edit3, LogOut, Camera, Clock, Calendar, Loader2,
+  Save, Edit3, LogOut, Camera, Clock, Calendar, Loader2, Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,7 @@ export default function ProfilePage() {
   const [editing,       setEditing]       = useState(false);
   const [saving,        setSaving]        = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
+  const [deletingAvatar, setDeletingAvatar] = useState(false);
   const [loading,       setLoading]       = useState(true);
 
   // Profile fields
@@ -126,6 +127,22 @@ export default function ProfilePage() {
     toast({ title: "📸 Avatar updated!" });
   };
 
+  const handleDeleteAvatar = async () => {
+    if (!user || !avatarUrl) return;
+    setDeletingAvatar(true);
+    const { error } = await profileService.deleteAvatar(user.id, avatarUrl);
+    if (error) {
+      toast({ title: "Delete failed", description: error.message, variant: "destructive" });
+      setDeletingAvatar(false);
+      return;
+    }
+    // Clear from auth metadata so sidebar/header update instantly
+    await supabase.auth.updateUser({ data: { avatar_url: null } });
+    setAvatarUrl(null);
+    setDeletingAvatar(false);
+    toast({ title: "🗑️ Photo removed", description: "Your profile photo has been deleted." });
+  };
+
   const handleSignOut = async () => { await signOut(); navigate("/"); };
 
   const initials  = fullName
@@ -193,6 +210,18 @@ export default function ProfilePage() {
               </button>
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
             </div>
+            {avatarUrl && (
+              <button
+                onClick={handleDeleteAvatar}
+                disabled={deletingAvatar || avatarLoading}
+                className="mt-1 flex items-center gap-1 text-xs text-destructive hover:text-destructive/80 transition-colors disabled:opacity-50"
+              >
+                {deletingAvatar
+                  ? <Loader2 className="h-3 w-3 animate-spin" />
+                  : <Trash2 className="h-3 w-3" />}
+                {deletingAvatar ? "Removing..." : "Remove photo"}
+              </button>
+            )}
             <h2 className="text-lg font-bold font-heading text-foreground">{fullName || "Your Name"}</h2>
             <p className="text-xs text-muted-foreground mt-1">{user?.email}</p>
             {location && (
