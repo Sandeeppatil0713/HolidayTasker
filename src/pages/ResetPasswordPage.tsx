@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Plane, CheckCircle2 } from "lucide-react";
+import { Plane, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -9,6 +9,8 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 export default function ResetPasswordPage() {
   const [password,        setPassword]        = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword,        setShowPassword]        = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading,         setLoading]         = useState(false);
   const [done,            setDone]            = useState(false);
   const [validSession,    setValidSession]    = useState(false);
@@ -16,10 +18,22 @@ export default function ResetPasswordPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Supabase puts the access token in the URL hash after redirect
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setValidSession(!!session);
+    // Supabase delivers the recovery token in the URL hash as #access_token=...&type=recovery
+    // We need to let the auth state change handler pick it up
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setValidSession(true);
+      } else if (session) {
+        setValidSession(true);
+      }
     });
+
+    // Also check if there's already an active session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) setValidSession(true);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -95,28 +109,46 @@ export default function ResetPasswordPage() {
                 Enter your new password below.
               </p>
 
-              <div className="inputGroup">
+              <div className="inputGroup" style={{ position: "relative" }}>
                 <input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="input"
+                  style={{ paddingRight: "2.5rem" }}
                 />
                 <label htmlFor="password">New Password</label>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(v => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
 
-              <div className="inputGroup">
+              <div className="inputGroup" style={{ position: "relative" }}>
                 <input
                   id="confirmPassword"
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   className="input"
+                  style={{ paddingRight: "2.5rem" }}
                 />
                 <label htmlFor="confirmPassword">Confirm Password</label>
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(v => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
 
               <button type="submit" className="btn" disabled={loading}>
