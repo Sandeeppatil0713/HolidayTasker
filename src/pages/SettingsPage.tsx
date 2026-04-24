@@ -186,42 +186,34 @@ export default function SettingsPage() {
 
   const doSendVacationAlert = async () => {
     if (!userEmail) {
-      toast({ title: "No email address found", description: "Please add an email to your account.", variant: "destructive" });
+      toast({ title: "No email address found", variant: "destructive" });
       return;
     }
     setSending("vacation");
     try {
+      console.log("Sending vacation alert to:", userEmail);
       await sendVacationAlertEmail(userEmail, userName, SAMPLE_TRIPS);
       toast({ title: "✈️ Vacation alert sent!", description: `Sent to ${userEmail}` });
     } catch (err: any) {
-      toast({
-        title: "Failed to send vacation alert",
-        description: err?.message?.includes("Edge Function") || err?.message?.includes("FunctionsFetchError")
-          ? "Email service is not configured. Check your Supabase Edge Function deployment."
-          : (err?.message ?? "Something went wrong."),
-        variant: "destructive",
-      });
+      console.error("Vacation alert error:", err);
+      toast({ title: "Failed to send vacation alert", description: err?.text ?? err?.message ?? "Unknown error", variant: "destructive" });
     } finally { setSending(null); }
   };
 
   const doSendEmailDigest = async () => {
     if (!userEmail) {
-      toast({ title: "No email address found", description: "Please add an email to your account.", variant: "destructive" });
+      toast({ title: "No email address found", variant: "destructive" });
       return;
     }
     setSending("email");
     try {
+      console.log("Sending digest to:", userEmail);
       const tasks = await tasksService.fetchTasks(user!.id);
       await sendEmailDigest(userEmail, userName, tasks, SAMPLE_TRIPS);
       toast({ title: "📬 Digest sent!", description: `Sent to ${userEmail}` });
     } catch (err: any) {
-      toast({
-        title: "Failed to send digest",
-        description: err?.message?.includes("Edge Function") || err?.message?.includes("FunctionsFetchError")
-          ? "Email service is not configured. Check your Supabase Edge Function deployment."
-          : (err?.message ?? "Something went wrong."),
-        variant: "destructive",
-      });
+      console.error("Digest error:", err);
+      toast({ title: "Failed to send digest", description: err?.text ?? err?.message ?? "Unknown error", variant: "destructive" });
     } finally { setSending(null); }
   };
 

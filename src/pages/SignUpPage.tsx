@@ -60,22 +60,11 @@ const SignupPage = () => {
       return;
     }
 
-    const disposableDomains = [
-      "mailinator.com", "guerrillamail.com", "tempmail.com", "throwaway.email",
-      "fakeinbox.com", "sharklasers.com", "guerrillamailblock.com", "grr.la",
-      "guerrillamail.info", "spam4.me", "trashmail.com", "yopmail.com",
-      "maildrop.cc", "dispostable.com", "mailnull.com", "spamgourmet.com",
-      "trashmail.me", "discard.email", "spamfree24.org", "getairmail.com",
-      "filzmail.com", "throwam.com", "tempr.email", "dispostable.com",
-      "mailnesia.com", "spamgourmet.net", "spamgourmet.org", "trashmail.at",
-      "trashmail.io", "trashmail.xyz", "temp-mail.org", "tempinbox.com",
-    ];
-
-    const emailDomain = lowerEmail.split("@")[1];
-    if (disposableDomains.includes(emailDomain)) {
+    // Only allow @gmail.com emails
+    if (!lowerEmail.endsWith("@gmail.com")) {
       toast({
         title: "Invalid Email",
-        description: "Disposable or temporary email addresses are not allowed",
+        description: "Only @gmail.com email addresses are allowed",
         variant: "destructive",
       });
       return;

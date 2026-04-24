@@ -75,7 +75,7 @@ export default function AdminNotifications() {
     const { error } = await supabase.from("announcements").insert([{ title, body, type, target }]);
     setSending(false);
     if (error) { toast({ title: "Failed to send", variant: "destructive" }); return; }
-    toast({ title: "Announcement sent" });
+    toast({ title: "✅ Announcement sent!" });
     setTitle(""); setBody("");
   };
 
