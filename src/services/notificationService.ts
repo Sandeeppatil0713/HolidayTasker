@@ -1,5 +1,9 @@
-import { supabase } from "@/lib/supabase";
+import emailjs from "@emailjs/browser";
 import { Task } from "./tasksService";
+
+const SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 export type NotifPrefs = {
   allNotif: boolean;
@@ -22,55 +26,62 @@ export function saveNotifPrefs(prefs: NotifPrefs) {
   localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
 }
 
-async function invokeNotification(type: string, to: string, userName: string, data: Record<string, any>) {
-  const { error } = await supabase.functions.invoke("send-notification", {
-    body: { type, to, userName, data },
-  });
-  if (error) throw error;
+async function send(to: string, name: string, subject: string, title: string, content: string) {
+  console.log("EmailJS sending to:", to, "| SERVICE:", SERVICE_ID, "| TEMPLATE:", TEMPLATE_ID);
+  const response = await emailjs.send(
+    SERVICE_ID,
+    TEMPLATE_ID,
+    { to_email: to, to_name: name, subject, title, content }
+  );
+  console.log("EmailJS response:", response);
+  return response;
 }
 
-/** Send task reminder email for tasks due today or tomorrow */
-export async function sendTaskReminderEmail(
-  to: string,
-  userName: string,
-  tasks: Task[]
-) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+export async function sendTaskReminderEmail(to: string, userName: string, tasks: Task[]) {
+  const today    = new Date(); today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
 
   const dueSoon = tasks.filter((t) => {
     if (t.done || !t.due_date) return false;
-    const due = new Date(t.due_date);
-    due.setHours(0, 0, 0, 0);
+    const due = new Date(t.due_date); due.setHours(0, 0, 0, 0);
     return due.getTime() === today.getTime() || due.getTime() === tomorrow.getTime();
   });
 
-  if (dueSoon.length === 0) return { skipped: true, reason: "No tasks due today or tomorrow" };
+  if (dueSoon.length === 0) return { skipped: true };
 
-  await invokeNotification("task_reminder", to, userName, { tasks: dueSoon });
+  const content = dueSoon
+    .map((t) => `• ${t.title} — ${t.priority} priority, due ${t.due_date}`)
+    .join("\n");
+
+  await send(to, userName, "⏰ Task Reminder — Tasks due soon!", "Task Reminder", content);
   return { sent: true, count: dueSoon.length };
 }
 
-/** Send vacation alert email */
 export async function sendVacationAlertEmail(
   to: string,
   userName: string,
   trips: { name: string; dates: string }[]
 ) {
-  await invokeNotification("vacation_alert", to, userName, { trips });
+  const content = trips.map((t) => `• ${t.name} — ${t.dates}`).join("\n");
+  await send(to, userName, "✈️ Vacation Alert — Upcoming trip reminder", "Vacation Alert", content);
   return { sent: true };
 }
 
-/** Send full email digest */
 export async function sendEmailDigest(
   to: string,
   userName: string,
   tasks: Task[],
   trips: { name: string; dates: string }[]
 ) {
-  const pending = tasks.filter((t) => !t.done);
-  await invokeNotification("email_digest", to, userName, { tasks: pending, trips });
+  const pending  = tasks.filter((t) => !t.done);
+  const taskText = pending.length
+    ? pending.map((t) => `• ${t.title} (due ${t.due_date ?? "no date"})`).join("\n")
+    : "No pending tasks.";
+  const tripText = trips.length
+    ? trips.map((t) => `• ${t.name} — ${t.dates}`).join("\n")
+    : "No upcoming trips.";
+
+  const content = `Pending Tasks:\n${taskText}\n\nUpcoming Trips:\n${tripText}`;
+  await send(to, userName, "📬 Your Daily Holiday Tasker Digest", "Daily Digest", content);
   return { sent: true };
 }
