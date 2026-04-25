@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { sendAnnouncementEmails } from "@/services/notificationService";
 
 interface Announcement {
   id: string;
@@ -42,25 +43,19 @@ export default function AdminNotifications() {
   const [type,    setType]    = useState("info");
   const [target,  setTarget]  = useState("all");
 
-  // Load existing announcements
   useEffect(() => {
     supabase.from("announcements")
       .select("*")
       .order("created_at", { ascending: false })
       .then(({ data }) => { if (data) setSent(data); setLoading(false); });
 
-    // Realtime subscription
     const channel = supabase
       .channel("announcements-realtime")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "announcements" },
-        (payload) => {
-          setSent(prev => [payload.new as Announcement, ...prev]);
-        }
+        (payload) => { setSent(prev => [payload.new as Announcement, ...prev]); }
       )
       .on("postgres_changes", { event: "DELETE", schema: "public", table: "announcements" },
-        (payload) => {
-          setSent(prev => prev.filter(a => a.id !== payload.old.id));
-        }
+        (payload) => { setSent(prev => prev.filter(a => a.id !== payload.old.id)); }
       )
       .subscribe();
 
@@ -72,11 +67,50 @@ export default function AdminNotifications() {
       toast({ title: "Fill in title and message", variant: "destructive" }); return;
     }
     setSending(true);
+
+    // 1. Insert announcement into DB (shows in notification bell for all users)
     const { error } = await supabase.from("announcements").insert([{ title, body, type, target }]);
+    if (error) {
+      setSending(false);
+      toast({ title: "Failed to send announcement", variant: "destructive" });
+      return;
+    }
+
+    // 2. Fetch all user emails from profiles table
+    try {
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("email, username");
+
+      if (profilesError || !profiles || profiles.length === 0) {
+        toast({
+          title: "Announcement sent",
+          description: "Saved to notification centre, but no users found to email.",
+        });
+        setSending(false);
+        setTitle(""); setBody("");
+        return;
+      }
+
+      // 3. Send emails via EmailJS
+      const { sent, failed } = await sendAnnouncementEmails(profiles, title, body, type);
+
+      toast({
+        title: "Announcement sent",
+        description: `Notification saved · ${sent} email${sent !== 1 ? "s" : ""} dispatched${failed > 0 ? ` · ${failed} failed` : ""}.`,
+      });
+    } catch (emailErr) {
+      console.error("Email dispatch error:", emailErr);
+      toast({
+        title: "Announcement sent",
+        description: "Saved to notification centre, but email dispatch failed.",
+        variant: "destructive",
+      });
+    }
+
     setSending(false);
-    if (error) { toast({ title: "Failed to send", variant: "destructive" }); return; }
-    toast({ title: "✅ Announcement sent!" });
-    setTitle(""); setBody("");
+    setTitle("");
+    setBody("");
   };
 
   const handleDelete = async (id: string) => {
@@ -116,7 +150,7 @@ export default function AdminNotifications() {
           </select>
           <Button size="sm" onClick={handleSend} disabled={sending || !title || !body} className="ml-auto gap-2">
             {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            {sending ? "Sending..." : "Send"}
+            {sending ? "Sending emails..." : "Send & Email All"}
           </Button>
         </div>
       </motion.div>
@@ -177,4 +211,3 @@ export default function AdminNotifications() {
     </div>
   );
 }
-

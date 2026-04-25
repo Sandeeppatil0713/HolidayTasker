@@ -5,6 +5,9 @@ const SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 const PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
+// Initialise EmailJS with the public key once
+emailjs.init(PUBLIC_KEY);
+
 export type NotifPrefs = {
   allNotif: boolean;
   taskReminder: boolean;
@@ -84,4 +87,40 @@ export async function sendEmailDigest(
   const content = `Pending Tasks:\n${taskText}\n\nUpcoming Trips:\n${tripText}`;
   await send(to, userName, "📬 Your Daily Holiday Tasker Digest", "Daily Digest", content);
   return { sent: true };
+}
+
+// ── Announcement broadcast ───────────────────────────────────────────────────
+export async function sendAnnouncementEmails(
+  users: { email: string; username: string | null }[],
+  title: string,
+  body: string,
+  type: string
+): Promise<{ sent: number; failed: number }> {
+  const typeLabel: Record<string, string> = {
+    info:    "📢 Announcement",
+    warning: "⚠️ Important Notice",
+    success: "✅ Good News",
+    alert:   "🚨 Alert",
+  };
+  const subject = `${typeLabel[type] ?? "📢 Announcement"}: ${title}`;
+
+  let sent = 0;
+  let failed = 0;
+
+  // Send sequentially to avoid EmailJS rate limits
+  for (const user of users) {
+    if (!user.email) continue;
+    const name = user.username || user.email.split("@")[0];
+    try {
+      await send(user.email, name, subject, title, body);
+      sent++;
+      // Small delay between sends to stay within EmailJS rate limits
+      await new Promise((r) => setTimeout(r, 300));
+    } catch (err) {
+      console.error(`Failed to send announcement to ${user.email}:`, err);
+      failed++;
+    }
+  }
+
+  return { sent, failed };
 }
