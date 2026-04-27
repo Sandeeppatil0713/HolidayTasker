@@ -174,6 +174,13 @@ export function NotificationBell() {
     persistReadIds(allIds);
   };
 
+  const clearAll = () => {
+    const allIds = new Set(notifications.map((n) => n.id));
+    setReadIds(allIds);
+    persistReadIds(allIds);
+    setNotifications([]);
+  };
+
   const markOneRead = (id: string) => {
     setReadIds((prev) => {
       const next = new Set([...prev, id]);
@@ -257,7 +264,12 @@ export function NotificationBell() {
       {displayed.length > 0 && (
         <div className="px-4 py-2.5 border-t border-gray-100/60 dark:border-gray-700/60 flex justify-between items-center">
           <span className="text-xs text-gray-400">{unreadCount} unread</span>
-          <span className="text-xs text-gray-400">{displayed.filter((n) => n.type === "overdue").length} overdue</span>
+          <button
+            onClick={clearAll}
+            className="text-xs text-red-400 hover:text-red-500 hover:underline font-medium transition-colors"
+          >
+            Clear all
+          </button>
         </div>
       )}
     </div>,
