@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { Bell, AlertTriangle, Clock, CheckCircle2, Info, Megaphone } from "lucide-react";
+import { Bell, AlertTriangle, Clock, CheckCircle2, Info, X } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -57,29 +57,18 @@ function buildTaskNotifications(tasks: any[]): Notification[] {
   return notifications;
 }
 
-// ── Announcement-derived notifications ──────────────────────────────────────
-function buildAnnouncementNotifications(announcements: any[]): Notification[] {
-  return announcements.map((a) => ({
-    id: `announcement-${a.id}`,
-    title: a.title,
-    description: a.body,
-    type: (a.type as Notification["type"]) ?? "info",
-    read: false,
-  }));
-}
-
 // ── Style map ────────────────────────────────────────────────────────────────
 const TYPE_STYLES: Record<string, { icon: React.ElementType; dot: string; bg: string; iconColor: string }> = {
-  overdue:    { icon: AlertTriangle, dot: "bg-red-500",     bg: "bg-red-50/40 dark:bg-red-900/10",     iconColor: "text-red-500" },
+  overdue:    { icon: AlertTriangle, dot: "bg-red-500",     bg: "bg-red-50/40 dark:bg-red-900/10",       iconColor: "text-red-500" },
   warning:    { icon: Clock,         dot: "bg-yellow-500",  bg: "bg-yellow-50/40 dark:bg-yellow-900/10", iconColor: "text-yellow-500" },
-  incomplete: { icon: CheckCircle2,  dot: "bg-blue-400",    bg: "",                                     iconColor: "text-blue-400" },
-  info:       { icon: Info,          dot: "bg-blue-400",    bg: "bg-blue-50/40 dark:bg-blue-900/10",    iconColor: "text-blue-400" },
+  incomplete: { icon: CheckCircle2,  dot: "bg-blue-400",    bg: "",                                      iconColor: "text-blue-400" },
+  info:       { icon: Info,          dot: "bg-blue-400",    bg: "bg-blue-50/40 dark:bg-blue-900/10",     iconColor: "text-blue-400" },
   success:    { icon: CheckCircle2,  dot: "bg-emerald-500", bg: "bg-emerald-50/40 dark:bg-emerald-900/10", iconColor: "text-emerald-500" },
-  alert:      { icon: AlertTriangle, dot: "bg-red-500",     bg: "bg-red-50/40 dark:bg-red-900/10",     iconColor: "text-red-500" },
-  announcement: { icon: Megaphone,   dot: "bg-primary",     bg: "bg-primary/5",                         iconColor: "text-primary" },
+  alert:      { icon: AlertTriangle, dot: "bg-red-500",     bg: "bg-red-50/40 dark:bg-red-900/10",       iconColor: "text-red-500" },
 };
 
-const READ_STORAGE_KEY = "notif_read_ids";
+const READ_STORAGE_KEY    = "notif_read_ids";
+const CLEARED_STORAGE_KEY = "notif_cleared_ids";
 
 function loadReadIds(): Set<string> {
   try {
@@ -95,6 +84,20 @@ function persistReadIds(ids: Set<string>) {
   } catch {}
 }
 
+function loadClearedIds(): Set<string> {
+  try {
+    const raw = localStorage.getItem(CLEARED_STORAGE_KEY);
+    if (raw) return new Set(JSON.parse(raw));
+  } catch {}
+  return new Set();
+}
+
+function persistClearedIds(ids: Set<string>) {
+  try {
+    localStorage.setItem(CLEARED_STORAGE_KEY, JSON.stringify([...ids]));
+  } catch {}
+}
+
 export function NotificationBell() {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
@@ -102,36 +105,31 @@ export function NotificationBell() {
   const [readIds, setReadIds] = useState<Set<string>>(loadReadIds);
   const [shake, setShake] = useState(false);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
+  const [selectedNotif, setSelectedNotif] = useState<Notification | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // ── Load tasks + announcements ─────────────────────────────────────────────
+  // ── Load tasks only (announcements go to email, not bell) ────────────────
   const loadNotifications = useCallback(async () => {
     if (!user) return;
 
-    // Fetch tasks and announcements independently so one failure doesn't block the other
     const { data: tasks } = await supabase
       .from("tasks")
       .select("id, title, done, due_date")
       .eq("user_id", user.id)
       .eq("done", false);
 
-    const { data: announcements } = await supabase
-      .from("announcements")
-      .select("id, title, body, type, target")
-      .eq("target", "all")
-      .order("created_at", { ascending: false })
-      .limit(20);
+    const taskNotifs = buildTaskNotifications(tasks ?? []);
 
-    const taskNotifs         = buildTaskNotifications(tasks ?? []);
-    const announcementNotifs = buildAnnouncementNotifications(announcements ?? []);
-    const all = [...announcementNotifs, ...taskNotifs];
+    // Filter out any notifications the user has already cleared
+    const clearedIds = loadClearedIds();
+    const filtered = taskNotifs.filter((n) => !clearedIds.has(n.id));
 
-    setNotifications(all);
+    setNotifications(filtered);
 
     // Shake bell if there are new unread items
     const currentReadIds = loadReadIds();
-    const hasNew = all.some((n) => !currentReadIds.has(n.id));
+    const hasNew = filtered.some((n) => !currentReadIds.has(n.id));
     if (hasNew) {
       setShake(true);
       setTimeout(() => setShake(false), 600);
@@ -140,18 +138,6 @@ export function NotificationBell() {
 
   useEffect(() => {
     loadNotifications();
-
-    // Realtime: new announcement → refresh
-    const channel = supabase
-      .channel("notif-bell-announcements")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "announcements" },
-        () => loadNotifications()
-      )
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
   }, [loadNotifications]);
 
   // ── Derived state ──────────────────────────────────────────────────────────
@@ -175,10 +161,16 @@ export function NotificationBell() {
   };
 
   const clearAll = () => {
-    const allIds = new Set(notifications.map((n) => n.id));
-    setReadIds(allIds);
-    persistReadIds(allIds);
-    setNotifications([]);
+    // Only remove read notifications — keep unread ones
+    const readNotifIds = notifications.filter((n) => readIds.has(n.id)).map((n) => n.id);
+
+    // Persist cleared IDs so they stay gone after refresh
+    const existing = loadClearedIds();
+    const updated  = new Set([...existing, ...readNotifIds]);
+    persistClearedIds(updated);
+
+    // Remove read ones from current state
+    setNotifications((prev) => prev.filter((n) => !readIds.has(n.id)));
   };
 
   const markOneRead = (id: string) => {
@@ -241,7 +233,10 @@ export function NotificationBell() {
             return (
               <li
                 key={n.id}
-                onClick={() => markOneRead(n.id)}
+                onClick={() => {
+                  markOneRead(n.id);
+                  setSelectedNotif({ ...n, read: true });
+                }}
                 className={`flex gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-gray-50/80 dark:hover:bg-gray-800/60 ${!n.read ? bg : ""}`}
               >
                 <span className="mt-1 shrink-0">
@@ -252,7 +247,7 @@ export function NotificationBell() {
                     <Icon className={`h-3.5 w-3.5 shrink-0 ${n.read ? "text-gray-400" : iconColor}`} />
                     <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{n.title}</p>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{n.description}</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 italic">Tap to read</p>
                 </div>
               </li>
             );
@@ -272,6 +267,69 @@ export function NotificationBell() {
           </button>
         </div>
       )}
+    </div>,
+    document.body
+  );
+
+  // ── Detail modal ─────────────────────────────────────────────────────────
+  const detailModal = selectedNotif && createPortal(
+    <div
+      className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
+      onClick={() => setSelectedNotif(null)}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+
+      {/* Modal box */}
+      <div
+        className="relative w-full max-w-sm rounded-2xl border border-white/20 dark:border-gray-700/50 shadow-[0_24px_64px_rgba(0,0,0,0.25)] dark:shadow-[0_24px_64px_rgba(0,0,0,0.6)] bg-white dark:bg-gray-900 p-6 animate-dropdown"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={() => setSelectedNotif(null)}
+          className="absolute top-4 right-4 p-1 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        {/* Icon + type badge */}
+        {(() => {
+          const style = TYPE_STYLES[selectedNotif.type] ?? TYPE_STYLES.info;
+          const { icon: Icon, bg, iconColor, dot } = style;
+          return (
+            <>
+              <div className={`inline-flex items-center justify-center h-10 w-10 rounded-xl mb-4 ${bg || "bg-gray-100 dark:bg-gray-800"}`}>
+                <Icon className={`h-5 w-5 ${iconColor}`} />
+              </div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className={`inline-block w-2 h-2 rounded-full ${dot}`} />
+                <span className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wide">
+                  {selectedNotif.type}
+                </span>
+              </div>
+            </>
+          );
+        })()}
+
+        {/* Title */}
+        <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3 leading-snug">
+          {selectedNotif.title}
+        </h3>
+
+        {/* Full message */}
+        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+          {selectedNotif.description}
+        </p>
+
+        {/* Dismiss button */}
+        <button
+          onClick={() => setSelectedNotif(null)}
+          className="mt-5 w-full py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
+        >
+          Dismiss
+        </button>
+      </div>
     </div>,
     document.body
   );
@@ -299,6 +357,7 @@ export function NotificationBell() {
         )}
       </button>
       {dropdown}
+      {detailModal}
     </div>
   );
 }

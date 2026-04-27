@@ -42,13 +42,25 @@ function UserModal({
     setSaving(true);
 
     if (mode === "add") {
-      // Sign up creates the user + triggers profile creation
-      const { error } = await supabase.auth.signUp({
-        email, password,
-        options: { data: { username, role } },
+      // Use edge function with service role — avoids signing the admin out
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await supabase.functions.invoke("create-user", {
+        body: { email, password, username, role },
+        headers: session?.access_token
+          ? { Authorization: `Bearer ${session.access_token}` }
+          : undefined,
       });
-      if (error) { toast({ title: "Failed", description: error.message, variant: "destructive" }); setSaving(false); return; }
-      toast({ title: "User created", description: "Confirmation email sent." });
+
+      if (res.error || res.data?.error) {
+        const msg = res.data?.error ?? res.error?.message ?? "Unknown error";
+        toast({ title: "Failed to create user", description: msg, variant: "destructive" });
+        setSaving(false);
+        return;
+      }
+      toast({ 
+        title: "User created successfully", 
+        description: "User can now log in with the provided credentials" 
+      });
     } else if (user) {
       // Update profile
       const { error } = await supabase.from("profiles")
@@ -100,6 +112,9 @@ function UserModal({
                   {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
+              <p className="text-xs text-muted-foreground/60 mt-1">
+                User can log in immediately with this password
+              </p>
             </div>
           )}
           <div className="space-y-1">
@@ -152,10 +167,24 @@ export default function AdminUsers() {
   );
 
   const deleteUser = async (id: string) => {
-    if (!confirm("Delete this user's profile?")) return;
-    await supabase.from("profiles").delete().eq("id", id);
+    if (!confirm("Delete this user permanently? This cannot be undone.")) return;
+
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await supabase.functions.invoke("delete-user", {
+      body: { userId: id },
+      headers: session?.access_token
+        ? { Authorization: `Bearer ${session.access_token}` }
+        : undefined,
+    });
+
+    if (res.error || res.data?.error) {
+      const msg = res.data?.error ?? res.error?.message ?? "Unknown error";
+      toast({ title: "Failed to delete user", description: msg, variant: "destructive" });
+      return;
+    }
+
     setUsers(p => p.filter(u => u.id !== id));
-    toast({ title: "User removed" });
+    toast({ title: "User deleted permanently" });
   };
 
   return (

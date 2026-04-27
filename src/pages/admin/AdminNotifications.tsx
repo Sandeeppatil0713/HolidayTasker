@@ -76,16 +76,18 @@ export default function AdminNotifications() {
       return;
     }
 
-    // 2. Fetch all user emails from profiles table
+    // 2. Fetch user emails — filter by target (all users vs admins only)
     try {
-      const { data: profiles, error: profilesError } = await supabase
-        .from("profiles")
-        .select("email, username");
+      let query = supabase.from("profiles").select("email, username, role");
+      if (target === "admins") {
+        query = query.eq("role", "admin");
+      }
+      const { data: profiles, error: profilesError } = await query;
 
       if (profilesError || !profiles || profiles.length === 0) {
         toast({
           title: "Announcement sent",
-          description: "Saved to notification centre, but no users found to email.",
+          description: `Saved to DB, but no ${target === "admins" ? "admin" : ""} users found to email.`,
         });
         setSending(false);
         setTitle(""); setBody("");
@@ -114,7 +116,14 @@ export default function AdminNotifications() {
   };
 
   const handleDelete = async (id: string) => {
-    await supabase.from("announcements").delete().eq("id", id);
+    const { error } = await supabase.from("announcements").delete().eq("id", id);
+    if (error) {
+      toast({ title: "Failed to delete", description: error.message, variant: "destructive" });
+      return;
+    }
+    // Update local state immediately — don't rely solely on realtime
+    setSent(prev => prev.filter(a => a.id !== id));
+    toast({ title: "Announcement deleted" });
   };
 
   return (

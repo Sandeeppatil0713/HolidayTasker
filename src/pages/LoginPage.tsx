@@ -11,6 +11,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showResendConfirmation, setShowResendConfirmation] = useState(false);
+  const [resendingEmail, setResendingEmail] = useState(false);
   const { signIn, isAdmin } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -18,11 +20,22 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setShowResendConfirmation(false);
 
     const { error } = await signIn(email, password);
 
     if (error) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
+      // Check if it's an email confirmation error
+      if (error.message.toLowerCase().includes("email not confirmed")) {
+        setShowResendConfirmation(true);
+        toast({ 
+          title: "Email not confirmed", 
+          description: "Please check your email and click the confirmation link to activate your account.",
+          variant: "destructive" 
+        });
+      } else {
+        toast({ title: "Error", description: error.message, variant: "destructive" });
+      }
     } else {
       toast({ title: "Success", description: "Welcome back!" });
       // Check role from Supabase user metadata
@@ -33,6 +46,30 @@ const LoginPage = () => {
     }
 
     setLoading(false);
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!email) {
+      toast({ title: "Error", description: "Please enter your email address", variant: "destructive" });
+      return;
+    }
+
+    setResendingEmail(true);
+    const { supabase } = await import("@/lib/supabase");
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email: email,
+    });
+
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ 
+        title: "Confirmation email sent", 
+        description: "Please check your inbox and spam folder.",
+      });
+    }
+    setResendingEmail(false);
   };
 
   return (
@@ -111,6 +148,23 @@ const LoginPage = () => {
             >
               {loading ? "SIGNING IN..." : "SIGN IN"}
             </button>
+
+            {showResendConfirmation && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="mt-3"
+              >
+                <button
+                  type="button"
+                  onClick={handleResendConfirmation}
+                  disabled={resendingEmail}
+                  className="w-full py-2.5 px-4 rounded-lg bg-muted/50 hover:bg-muted text-sm font-medium text-foreground transition-colors disabled:opacity-50"
+                >
+                  {resendingEmail ? "Sending..." : "Resend Confirmation Email"}
+                </button>
+              </motion.div>
+            )}
 
             <div className="mt-4 text-center text-sm">
               <span className="text-muted-foreground">Don't have an account? </span>
