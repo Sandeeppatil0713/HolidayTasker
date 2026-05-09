@@ -1,41 +1,70 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Star, Calendar, Plus, Plane, Search, Loader2, X, Heart } from "lucide-react";
+import { MapPin, Star, Calendar, Plus, Plane, Search, Loader2, X, Heart, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGooglePlaces } from "@/hooks/useGooglePlaces";
 import { useFavourites } from "@/contexts/FavouritesContext";
 
-const destinations = [
-  { name: "Bali, Indonesia", rating: 4.8, season: "Jun–Sep", duration: "7 days", image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80", tags: ["Beach", "Culture"] },
-  { name: "Kyoto, Japan", rating: 4.9, season: "Mar–May", duration: "5 days", image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&q=80", tags: ["Culture", "Food"] },
-  { name: "Santorini, Greece", rating: 4.7, season: "Apr–Oct", duration: "6 days", image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&q=80", tags: ["Beach", "Romance"] },
-  { name: "Banff, Canada", rating: 4.6, season: "Dec–Mar", duration: "4 days", image: "https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&q=80", tags: ["Nature", "Adventure"] },
-  { name: "Marrakech, Morocco", rating: 4.5, season: "Oct–Apr", duration: "5 days", image: "https://images.unsplash.com/photo-1597212618440-806262de4f6b?w=400&q=80", tags: ["Culture", "Shopping"] },
-  { name: "Reykjavik, Iceland", rating: 4.8, season: "Jun–Aug", duration: "6 days", image: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=400&q=80", tags: ["Nature", "Adventure"] },
+const ALL_DESTINATIONS = [
+  { name: "Bali, Indonesia",       rating: 4.8, season: "Jun–Sep", duration: "7 days", image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80",  tags: ["Beach", "Culture"] },
+  { name: "Kyoto, Japan",          rating: 4.9, season: "Mar–May", duration: "5 days", image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&q=80",  tags: ["Culture", "Food"] },
+  { name: "Santorini, Greece",     rating: 4.7, season: "Apr–Oct", duration: "6 days", image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400&q=80",  tags: ["Beach", "Romance"] },
+  { name: "Banff, Canada",         rating: 4.6, season: "Dec–Mar", duration: "4 days", image: "https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&q=80",  tags: ["Nature", "Adventure"] },
+  { name: "Marrakech, Morocco",    rating: 4.5, season: "Oct–Apr", duration: "5 days", image: "https://images.unsplash.com/photo-1597212618440-806262de4f6b?w=400&q=80",  tags: ["Culture", "Shopping"] },
+  { name: "Reykjavik, Iceland",    rating: 4.8, season: "Jun–Aug", duration: "6 days", image: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=400&q=80",  tags: ["Nature", "Adventure"] },
+  { name: "Paris, France",         rating: 4.9, season: "Apr–Jun", duration: "5 days", image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80",  tags: ["Romance", "Culture"] },
+  { name: "Tokyo, Japan",          rating: 4.9, season: "Mar–May", duration: "7 days", image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=80",  tags: ["Culture", "Food"] },
+  { name: "New York, USA",         rating: 4.7, season: "Sep–Nov", duration: "6 days", image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&q=80",  tags: ["City", "Shopping"] },
+  { name: "Maldives",              rating: 5.0, season: "Nov–Apr", duration: "7 days", image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&q=80",  tags: ["Beach", "Luxury"] },
+  { name: "Dubai, UAE",            rating: 4.7, season: "Nov–Mar", duration: "5 days", image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=80",  tags: ["Luxury", "Shopping"] },
+  { name: "Rome, Italy",           rating: 4.8, season: "Apr–Jun", duration: "5 days", image: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&q=80",  tags: ["Culture", "Food"] },
+  { name: "Barcelona, Spain",      rating: 4.8, season: "May–Sep", duration: "5 days", image: "https://images.unsplash.com/photo-1583422409516-2895a77efded?w=400&q=80",  tags: ["Beach", "Culture"] },
+  { name: "Cape Town, S. Africa",  rating: 4.7, season: "Nov–Mar", duration: "6 days", image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=400&q=80",  tags: ["Nature", "Adventure"] },
+  { name: "Sydney, Australia",     rating: 4.8, season: "Dec–Feb", duration: "7 days", image: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=400&q=80",  tags: ["Beach", "City"] },
+  { name: "Prague, Czech Republic",rating: 4.7, season: "May–Sep", duration: "4 days", image: "https://images.unsplash.com/photo-1541849546-216549ae216d?w=400&q=80",  tags: ["Culture", "History"] },
+  { name: "Amalfi Coast, Italy",   rating: 4.9, season: "May–Oct", duration: "5 days", image: "https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?w=400&q=80",  tags: ["Beach", "Romance"] },
+  { name: "Queenstown, NZ",        rating: 4.8, season: "Dec–Feb", duration: "5 days", image: "https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=400&q=80",  tags: ["Adventure", "Nature"] },
+  { name: "Petra, Jordan",         rating: 4.8, season: "Mar–May", duration: "3 days", image: "https://images.unsplash.com/photo-1579606032821-4e6161c81bd3?w=400&q=80",  tags: ["History", "Culture"] },
+  { name: "Phuket, Thailand",      rating: 4.6, season: "Nov–Apr", duration: "6 days", image: "https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=400&q=80",  tags: ["Beach", "Food"] },
+  { name: "Lisbon, Portugal",      rating: 4.7, season: "Apr–Oct", duration: "4 days", image: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=400&q=80",  tags: ["Culture", "Food"] },
+  { name: "Machu Picchu, Peru",    rating: 4.9, season: "May–Sep", duration: "4 days", image: "https://images.unsplash.com/photo-1526392060635-9d6019884377?w=400&q=80",  tags: ["History", "Adventure"] },
+  { name: "Serengeti, Tanzania",   rating: 4.9, season: "Jun–Oct", duration: "7 days", image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=400&q=80",  tags: ["Nature", "Adventure"] },
+  { name: "Amsterdam, Netherlands",rating: 4.7, season: "Apr–Aug", duration: "4 days", image: "https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=400&q=80",  tags: ["Culture", "City"] },
 ];
 
-const trips = [
-  {
-    name: "Bali Adventure",
-    dates: "Dec 15–22, 2026",
-    days: [
-      { day: 1, activities: ["Arrive at Denpasar", "Check into villa", "Sunset at Tanah Lot"] },
-      { day: 2, activities: ["Ubud rice terraces", "Monkey Forest", "Spa treatment"] },
-      { day: 3, activities: ["Snorkeling at Nusa Penida", "Beach lunch", "Night market"] },
-    ],
-  },
-];
+// Shuffle array using Fisher-Yates
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
-const formatType = (type: string) =>
-  type.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+const CARDS_PER_PAGE = 6;
 
 const PRICE = ["", "₹", "₹₹", "₹₹₹", "₹₹₹₹"];
 
+interface Place {
+  placeId: string;
+  name: string;
+  vicinity: string;
+  rating?: number;
+  totalRatings?: number;
+  photo?: string;
+  types?: string[];
+  openNow?: boolean;
+  priceLevel?: number;
+}
+
 interface PlaceSectionProps {
-  title: string; emoji: string; places: any[];
+  title: string;
+  emoji: string;
+  places: Place[];
   isFavourite: (id: string) => boolean;
-  addFavourite: (p: any) => void;
+  addFavourite: (p: Place & { addedAt: string }) => void;
   removeFavourite: (id: string) => void;
   showPrice?: boolean;
 }
@@ -55,7 +84,15 @@ function PlaceSection({ title, emoji, places, isFavourite, addFavourite, removeF
                 : <div className="w-full h-full flex items-center justify-center"><MapPin className="h-8 w-8 text-muted-foreground/30" /></div>
               }
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              <button onClick={(e) => { e.stopPropagation(); isFavourite(place.placeId) ? removeFavourite(place.placeId) : addFavourite({ placeId: place.placeId, name: place.name, vicinity: place.vicinity, rating: place.rating, photo: place.photo, types: place.types, addedAt: new Date().toLocaleDateString() }); }}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (isFavourite(place.placeId)) {
+                    removeFavourite(place.placeId);
+                  } else {
+                    addFavourite({ placeId: place.placeId, name: place.name, vicinity: place.vicinity, rating: place.rating, photo: place.photo, types: place.types, addedAt: new Date().toLocaleDateString() });
+                  }
+                }}
                 className="absolute top-2 right-2 h-7 w-7 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:scale-110 transition-all">
                 <Heart className={`h-3.5 w-3.5 ${isFavourite(place.placeId) ? "fill-red-400 text-red-400" : "text-white"}`} />
               </button>
@@ -94,8 +131,10 @@ const VacationsPage = () => {
   const [search, setSearch]               = useState("");
   const [selectedPlace, setSelectedPlace] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [activeTrip] = useState(0);
-  const searchRef = useRef<HTMLDivElement>(null);
+  const [displayed, setDisplayed]         = useState(() => shuffle(ALL_DESTINATIONS).slice(0, CARDS_PER_PAGE));
+  const [refreshing, setRefreshing]       = useState(false);
+  const searchRef      = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const {
     search: searchPlaces, suggestions, loadingSearch,
@@ -134,18 +173,45 @@ const VacationsPage = () => {
     clear(); clearNearby(); setShowSuggestions(false);
   };
 
-  const filtered = destinations.filter((d) =>
+  const handleDestinationClick = (name: string) => {
+    setSearch(name);
+    setSelectedPlace("");
+    clearNearby();
+    searchPlaces(name);
+    setShowSuggestions(true);
+    searchRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => searchInputRef.current?.focus(), 400);
+  };
+
+  const handleNewTrip = () => {
+    searchRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => searchInputRef.current?.focus(), 400);
+  };
+
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setDisplayed(shuffle(ALL_DESTINATIONS).slice(0, CARDS_PER_PAGE));
+      setRefreshing(false);
+    }, 400);
+  }, []);
+
+  const filtered = displayed.filter((d) =>
     d.name.toLowerCase().includes(search.toLowerCase()) ||
     d.tags.some((t) => t.toLowerCase().includes(search.toLowerCase()))
   );
 
-  const trip = trips[activeTrip];
-
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold font-heading heading-gradient">Vacation Planner</h1>
-        <p className="text-sm text-muted-foreground">Discover destinations and plan your dream trips</p>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold font-heading heading-gradient">Vacation Planner</h1>
+          <p className="text-sm text-muted-foreground">Discover destinations and plan your dream trips</p>
+        </div>
+        <Button size="sm" onClick={handleNewTrip} className="gap-2">
+          <Plus className="h-4 w-4" /> New Trip
+        </Button>
       </div>
 
       {/* Search */}
@@ -153,6 +219,7 @@ const VacationsPage = () => {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
+            ref={searchInputRef}
             placeholder="Search any city, region or country..."
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
@@ -161,9 +228,11 @@ const VacationsPage = () => {
           />
           {loadingSearch
             ? <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground animate-spin" />
-            : search && <button onClick={handleClear} className="absolute right-3 top-1/2 -translate-y-1/2">
+            : search && (
+              <button onClick={handleClear} className="absolute right-3 top-1/2 -translate-y-1/2">
                 <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
               </button>
+            )
           }
         </div>
 
@@ -190,11 +259,10 @@ const VacationsPage = () => {
         </AnimatePresence>
       </div>
 
-      {/* ── Nearby places from Google ── */}
+      {/* Nearby places from Google */}
       <AnimatePresence>
         {(loadingNearby || nearby.attractions.length > 0 || nearby.hotels.length > 0 || nearby.restaurants.length > 0) && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-8">
-
             {loadingNearby ? (
               <div className="flex items-center justify-center py-16 gap-3 text-muted-foreground">
                 <Loader2 className="h-5 w-5 animate-spin" />
@@ -202,42 +270,20 @@ const VacationsPage = () => {
               </div>
             ) : (
               <>
-                {/* Tourist Attractions */}
                 {nearby.attractions.length > 0 && (
-                  <PlaceSection
-                    title={`Top Attractions near ${selectedPlace}`}
-                    emoji="🏛️"
-                    places={nearby.attractions}
-                    isFavourite={isFavourite}
-                    addFavourite={addFavourite}
-                    removeFavourite={removeFavourite}
-                  />
+                  <PlaceSection title={`Top Attractions near ${selectedPlace}`} emoji="🏛️"
+                    places={nearby.attractions} isFavourite={isFavourite}
+                    addFavourite={addFavourite} removeFavourite={removeFavourite} />
                 )}
-
-                {/* Hotels */}
                 {nearby.hotels.length > 0 && (
-                  <PlaceSection
-                    title="Top Rated Hotels"
-                    emoji="🏨"
-                    places={nearby.hotels}
-                    isFavourite={isFavourite}
-                    addFavourite={addFavourite}
-                    removeFavourite={removeFavourite}
-                    showPrice
-                  />
+                  <PlaceSection title="Top Rated Hotels" emoji="🏨"
+                    places={nearby.hotels} isFavourite={isFavourite}
+                    addFavourite={addFavourite} removeFavourite={removeFavourite} showPrice />
                 )}
-
-                {/* Restaurants */}
                 {nearby.restaurants.length > 0 && (
-                  <PlaceSection
-                    title="Top Rated Restaurants"
-                    emoji="🍽️"
-                    places={nearby.restaurants}
-                    isFavourite={isFavourite}
-                    addFavourite={addFavourite}
-                    removeFavourite={removeFavourite}
-                    showPrice
-                  />
+                  <PlaceSection title="Top Rated Restaurants" emoji="🍽️"
+                    places={nearby.restaurants} isFavourite={isFavourite}
+                    addFavourite={addFavourite} removeFavourite={removeFavourite} showPrice />
                 )}
               </>
             )}
@@ -245,75 +291,58 @@ const VacationsPage = () => {
         )}
       </AnimatePresence>
 
-      {/* ── Default destinations (shown when no search) ── */}
+      {/* Destination cards */}
       {!selectedPlace && !loadingNearby && (
         <div>
-          <h2 className="text-lg font-semibold font-heading text-foreground mb-4">Discover Destinations</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map((d, i) => (
-              <motion.div key={d.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                className="rounded-xl card-glass overflow-hidden hover:shadow-card-hover transition-all cursor-pointer group">
-                <div className="relative h-40 overflow-hidden">
-                  <img src={d.image} alt={d.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold font-heading text-foreground group-hover:text-primary transition-colors">{d.name}</h3>
-                  <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                    <Star className="h-3 w-3 fill-accent text-accent" /> {d.rating}
-                    <span>•</span><Calendar className="h-3 w-3" /> {d.season}
-                    <span>•</span><Plane className="h-3 w-3" /> {d.duration}
-                  </div>
-                  <div className="flex gap-1.5 mt-3">
-                    {d.tags.map((t) => (
-                      <span key={t} className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{t}</span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold font-heading text-foreground">Discover Destinations</h2>
+            <button
+              onClick={handleRefresh}
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
+              Shuffle
+            </button>
           </div>
+          <AnimatePresence mode="wait">
+            {!refreshing && (
+              <motion.div
+                key={displayed.map(d => d.name).join()}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
+              >
+                {filtered.map((d, i) => (
+                  <motion.div key={d.name}
+                    initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
+                    onClick={() => handleDestinationClick(d.name)}
+                    className="rounded-xl card-glass overflow-hidden hover:shadow-card-hover transition-all cursor-pointer group">
+                    <div className="relative h-40 overflow-hidden">
+                      <img src={d.image} alt={d.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-semibold font-heading text-foreground group-hover:text-primary transition-colors">{d.name}</h3>
+                      <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                        <Star className="h-3 w-3 fill-accent text-accent" /> {d.rating}
+                        <span>•</span><Calendar className="h-3 w-3" /> {d.season}
+                        <span>•</span><Plane className="h-3 w-3" /> {d.duration}
+                      </div>
+                      <div className="flex gap-1.5 mt-3">
+                        {d.tags.map((t) => (
+                          <span key={t} className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">{t}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
-
-      {/* Trip planner */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold font-heading text-foreground">My Trips</h2>
-          <Button size="sm" variant="outline"><Plus className="h-4 w-4 mr-1" /> New Trip</Button>
-        </div>
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="rounded-xl card-glass p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Plane className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm font-heading text-foreground">{trip.name}</h3>
-                <p className="text-xs text-muted-foreground">{trip.dates}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground mt-4">
-              <Calendar className="h-4 w-4" /><span>7 days of adventure</span>
-            </div>
-          </div>
-          <div className="lg:col-span-2 rounded-xl card-glass p-5">
-            <h3 className="font-semibold text-sm font-heading text-foreground mb-4">Itinerary</h3>
-            <div className="space-y-4">
-              {trip.days.map((day) => (
-                <div key={day.day}>
-                  <div className="text-xs font-semibold text-primary mb-1.5">Day {day.day}</div>
-                  <div className="space-y-1.5 pl-3 border-l-2 border-primary/20">
-                    {day.activities.map((a) => (
-                      <div key={a} className="text-sm text-muted-foreground">{a}</div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

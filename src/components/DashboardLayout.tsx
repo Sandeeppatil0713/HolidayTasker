@@ -43,7 +43,7 @@ function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <div className="flex h-16 items-center px-4 border-b border-sidebar-border">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-hero shrink-0">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shrink-0">
             <Plane className="h-4 w-4 text-primary-foreground" />
           </div>
           {!collapsed && <span className="text-base font-bold font-heading heading-gradient">Holiday Tasker</span>}
@@ -155,7 +155,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
               </Button>
             </div>
           </header>
-          <main className="flex-1 p-4 md:p-6 overflow-auto bg-white dark:bg-[#1a2235]">
+          <main className="flex-1 p-4 md:p-6 overflow-auto bg-background">
             {children}
           </main>
         </div>

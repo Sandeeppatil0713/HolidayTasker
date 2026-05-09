@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,216 +6,176 @@
 
 @layer base {
   :root {
-    /* Light Mode — clean warm white with violet primary + amber accent */
-    --background: 0 0% 98%;
-    --foreground: 240 10% 10%;
+    /* ── Light Mode ── Warm off-white/beige with sky blue */
+    --background:  40 30% 96%;
+    --foreground:  204 25% 8%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 10%;
+    --card:        40 25% 99%;
+    --card-foreground: 204 25% 8%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 10%;
+    --popover:     40 25% 99%;
+    --popover-foreground: 204 25% 8%;
 
-    --primary: 252 87% 57%;
+    /* Sky Blue — clean, trustworthy, modern */
+    --primary:     199 89% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 10% 10%;
+    /* Soft sky secondary — perfectly matches */
+    --secondary:   199 60% 92%;
+    --secondary-foreground: 199 70% 20%;
 
-    --accent: 38 95% 55%;
-    --accent-foreground: 30 40% 10%;
+    --accent:      199 89% 40%;
+    --accent-foreground: 0 0% 100%;
 
-    --muted: 240 5% 94%;
-    --muted-foreground: 240 5% 45%;
+    --muted:       40 20% 93%;
+    --muted-foreground: 204 10% 46%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%;
-    --input: 240 6% 90%;
-    --ring: 252 87% 57%;
+    --border:      40 15% 87%;
+    --input:       40 15% 87%;
+    --ring:        199 89% 40%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 10% 10%;
-    --sidebar-primary: 252 87% 57%;
+    --sidebar-background:        40 30% 96%;
+    --sidebar-foreground:        204 25% 8%;
+    --sidebar-primary:           199 89% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 5% 94%;
-    --sidebar-accent-foreground: 252 87% 57%;
-    --sidebar-border: 240 6% 90%;
-    --sidebar-ring: 252 87% 57%;
+    --sidebar-accent:            199 60% 92%;
+    --sidebar-accent-foreground: 199 89% 40%;
+    --sidebar-border:            40 15% 87%;
+    --sidebar-ring:              199 89% 40%;
 
-    --gradient-hero: linear-gradient(135deg, hsl(252 87% 57%), hsl(280 80% 60%), hsl(38 95% 55%));
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(240 5% 97%));
-    --gradient-accent: linear-gradient(135deg, hsl(252 87% 57%), hsl(280 80% 65%));
-    --gradient-soft: linear-gradient(120deg, hsl(0 0% 98%), hsl(252 60% 97%), hsl(0 0% 100%));
-    --gradient-mesh: radial-gradient(at 0% 0%, hsl(252 87% 57% / 0.12) 0px, transparent 50%),
-                     radial-gradient(at 100% 0%, hsl(280 80% 60% / 0.1) 0px, transparent 50%),
-                     radial-gradient(at 100% 100%, hsl(38 95% 55% / 0.1) 0px, transparent 50%),
-                     radial-gradient(at 0% 100%, hsl(252 87% 57% / 0.08) 0px, transparent 50%);
-    --shadow-card: 0 1px 3px hsl(240 10% 10% / 0.06), 0 4px 16px hsl(240 10% 10% / 0.04);
-    --shadow-card-hover: 0 4px 24px hsl(252 87% 57% / 0.15);
-    --shadow-hero: 0 20px 60px -15px hsl(252 87% 57% / 0.2);
-    --shadow-glow: 0 0 40px hsl(252 87% 57% / 0.25);
+    --shadow-card:       0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
+    --shadow-card-hover: 0 8px 24px rgba(2,132,199,0.12);
+    --shadow-glow:       0 0 0 3px rgba(2,132,199,0.18);
 
-    --font-heading: 'Archivo Black', system-ui, sans-serif;
-    --font-body: 'Archivo Black', system-ui, sans-serif;
+    --font-heading: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
   }
 
   .dark {
-    /* Dark Mode — deep charcoal with violet primary + amber accent */
-    --background: 240 10% 6%;
-    --foreground: 0 0% 95%;
+    /* ── Dark Mode ── Dark Teal-Navy with sky blue accent */
+    --background:  200 40% 7%;
+    --foreground:  200 15% 96%;
 
-    --card: 240 10% 9%;
-    --card-foreground: 0 0% 95%;
+    --card:        200 40% 13%;
+    --card-foreground: 200 15% 96%;
 
-    --popover: 240 10% 8%;
-    --popover-foreground: 0 0% 95%;
+    --popover:     200 40% 13%;
+    --popover-foreground: 200 15% 96%;
 
-    --primary: 252 87% 65%;
+    /* Sky Blue — consistent with light mode */
+    --primary:     199 89% 48%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 8% 14%;
-    --secondary-foreground: 0 0% 90%;
+    /* Deep navy secondary */
+    --secondary:   214 25% 16%;
+    --secondary-foreground: 199 60% 75%;
 
-    --accent: 38 95% 58%;
-    --accent-foreground: 30 40% 10%;
+    --accent:      199 89% 48%;
+    --accent-foreground: 0 0% 100%;
 
-    --muted: 240 8% 13%;
-    --muted-foreground: 240 5% 55%;
+    --muted:       200 35% 13%;
+    --muted-foreground: 200 10% 54%;
 
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 8% 15%;
-    --input: 240 8% 14%;
-    --ring: 252 87% 65%;
+    --border:      200 35% 15%;
+    --input:       200 35% 13%;
+    --ring:        199 89% 48%;
 
-    --sidebar-background: 240 10% 7%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 252 87% 65%;
+    --sidebar-background:        200 40% 5%;
+    --sidebar-foreground:        200 15% 96%;
+    --sidebar-primary:           199 89% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 8% 13%;
-    --sidebar-accent-foreground: 252 87% 65%;
-    --sidebar-border: 240 8% 14%;
-    --sidebar-ring: 252 87% 65%;
+    --sidebar-accent:            200 35% 13%;
+    --sidebar-accent-foreground: 199 89% 48%;
+    --sidebar-border:            200 35% 15%;
+    --sidebar-ring:              199 89% 48%;
 
-    --gradient-hero: linear-gradient(135deg, hsl(252 87% 65%), hsl(280 80% 65%), hsl(38 95% 58%));
-    --gradient-card: linear-gradient(145deg, hsl(240 10% 10%), hsl(240 10% 7%));
-    --gradient-accent: linear-gradient(135deg, hsl(252 87% 65%), hsl(280 80% 65%));
-    --gradient-soft: linear-gradient(120deg, hsl(240 10% 6%), hsl(240 10% 9%), hsl(240 10% 7%));
-    --gradient-mesh: radial-gradient(at 0% 0%, hsl(252 87% 65% / 0.2) 0px, transparent 50%),
-                     radial-gradient(at 100% 0%, hsl(280 80% 65% / 0.15) 0px, transparent 50%),
-                     radial-gradient(at 100% 100%, hsl(38 95% 58% / 0.1) 0px, transparent 50%),
-                     radial-gradient(at 0% 100%, hsl(252 87% 65% / 0.12) 0px, transparent 50%);
-    --shadow-card: 0 1px 3px hsl(0 0% 0% / 0.4), 0 4px 16px hsl(0 0% 0% / 0.3);
-    --shadow-card-hover: 0 4px 24px hsl(252 87% 65% / 0.2);
-    --shadow-hero: 0 20px 60px -15px hsl(252 87% 65% / 0.35);
-    --shadow-glow: 0 0 60px hsl(252 87% 65% / 0.3);
+    --shadow-card:       0 1px 3px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.4);
+    --shadow-card-hover: 0 8px 24px rgba(2,132,199,0.22);
+    --shadow-glow:       0 0 0 3px rgba(2,132,199,0.28);
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+  * { @apply border-border; }
 
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
     font-size: 15px;
-    line-height: 1.6;
+    font-weight: 400;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    letter-spacing: -0.02em;
-    line-height: 1.15;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    font-weight: 700;
   }
 }
 
 @layer utilities {
-  .gradient-hero {
-    background: var(--gradient-hero);
-  }
-  .gradient-accent {
-    background: var(--gradient-accent);
-  }
-  .gradient-soft {
-    background: var(--gradient-soft);
-  }
-  .gradient-mesh {
-    background: var(--gradient-mesh);
-  }
-  .shadow-card {
+  /* ── Shadows ── */
+  .shadow-card       { box-shadow: var(--shadow-card); }
+  .shadow-card-hover { box-shadow: var(--shadow-card-hover); }
+  .shadow-glow       { box-shadow: var(--shadow-glow); }
+
+  /* ── Glass card — subtle frosted look ── */
+  .card-glass {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
     box-shadow: var(--shadow-card);
   }
-  .shadow-card-hover {
-    box-shadow: var(--shadow-card-hover);
+  .dark .card-glass {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
   }
-  .shadow-hero {
-    box-shadow: var(--shadow-hero);
+
+  /* ── Heading accent color ── */
+  .heading-gradient {
+    color: hsl(var(--primary));
   }
-  .shadow-glow {
-    box-shadow: var(--shadow-glow);
-  }
+
+  /* ── Glass utility ── */
   .glass {
-    background: hsl(191 100% 91% / 0.7);
+    background: rgba(255,255,255,0.75);
     backdrop-filter: blur(12px);
-    border: 1px solid hsl(218 75% 55% / 0.2);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0,0,0,0.06);
   }
   .dark .glass {
-    background: hsl(218 35% 18% / 0.7);
+    background: rgba(15,20,40,0.75);
     backdrop-filter: blur(12px);
-    border: 1px solid hsl(218 75% 65% / 0.25);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.06);
   }
-  /* Gradient heading text */
-  .heading-gradient {
-    background: linear-gradient(135deg, #6d28d9, #7c3aed, #a855f7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .dark .heading-gradient {
-    background: linear-gradient(135deg, #a78bfa, #c084fc, #f59e0b);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .card-glass {
-    background: hsl(191 100% 91% / 0.55);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid hsl(207 100% 89% / 0.6);
-    box-shadow: 0 4px 24px -4px hsl(215 40% 30% / 0.08);
-  }
-  .dark .card-glass {
-    background: hsl(218 35% 18% / 0.55);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid hsl(218 75% 65% / 0.15);
-    box-shadow: 0 4px 24px -4px hsl(0 0% 0% / 0.4);
-  }
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-  .animate-pulse-soft {
-    animation: pulse-soft 4s ease-in-out infinite;
-  }
+
+  /* ── Animations ── */
+  .animate-float      { animation: float 6s ease-in-out infinite; }
+  .animate-pulse-soft { animation: pulse-soft 4s ease-in-out infinite; }
+
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-16px); }
   }
   @keyframes pulse-soft {
     0%, 100% { opacity: 0.5; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.05); }
+    50%       { opacity: 0.8; transform: scale(1.04); }
   }
 
-  /* Animated Theme Toggle Switch */
+  /* ── Theme Toggle Switch ── */
   .switch {
     font-size: 13px;
     position: relative;
@@ -223,500 +183,314 @@
     width: 46px;
     height: 24px;
   }
-
-  .switch .input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
+  .switch .input { opacity: 0; width: 0; height: 0; }
   .slider {
     position: absolute;
     cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background-color: hsl(var(--primary));
     transition: .4s;
     border-radius: 30px;
   }
-
   .slider:before {
     position: absolute;
     content: "";
-    height: 20px;
-    width: 20px;
+    height: 20px; width: 20px;
     border-radius: 50%;
-    left: 2px;
-    bottom: 2px;
+    left: 2px; bottom: 2px;
     z-index: 2;
     background-color: #e8e8e8;
     transition: .4s;
   }
-
   .sun svg {
     position: absolute;
-    top: 4px;
-    left: 25px;
-    z-index: 1;
-    width: 16px;
-    height: 16px;
+    top: 4px; left: 25px;
+    z-index: 1; width: 16px; height: 16px;
   }
-
   .moon svg {
     fill: hsl(var(--primary));
     position: absolute;
-    top: 4px;
-    left: 4px;
-    z-index: 1;
-    width: 16px;
-    height: 16px;
+    top: 4px; left: 4px;
+    z-index: 1; width: 16px; height: 16px;
   }
-
-  .switch:hover .sun svg {
-    animation: rotate 15s linear infinite;
-  }
-
-  @keyframes rotate {
-    0% { transform: rotate(0); }
-    100% { transform: rotate(360deg); }
-  }
-
-  .switch:hover .moon svg {
-    animation: tilt 5s linear infinite;
-  }
-
+  .switch:hover .sun svg  { animation: rotate 15s linear infinite; }
+  .switch:hover .moon svg { animation: tilt 5s linear infinite; }
+  @keyframes rotate { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
   @keyframes tilt {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(-10deg); }
-    75% { transform: rotate(10deg); }
+    0%   { transform: rotate(0deg); }
+    25%  { transform: rotate(-10deg); }
+    75%  { transform: rotate(10deg); }
     100% { transform: rotate(0deg); }
   }
+  .input:checked + .slider { background-color: hsl(var(--primary)); }
+  .input:focus  + .slider  { box-shadow: 0 0 1px hsl(var(--primary)); }
+  .input:checked + .slider:before { transform: translateX(22px); }
 
-  .input:checked + .slider {
-    background-color: hsl(var(--accent));
-  }
-
-  .input:focus + .slider {
-    box-shadow: 0 0 1px hsl(var(--accent));
-  }
-
-  .input:checked + .slider:before {
-    transform: translateX(22px);
-  }
-
-  /* Animated Checkbox */
-  .checkbox-container {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-
-  .checkbox-container label {
-    cursor: pointer;
-  }
-
-  .checkbox input[type="checkbox"] {
-    display: none;
-  }
-
+  /* ── Animated Checkbox ── */
+  .checkbox-container { display: flex; align-items: center; cursor: pointer; }
+  .checkbox-container label { cursor: pointer; }
+  .checkbox input[type="checkbox"] { display: none; }
   .checkbox {
-    width: 2rem;
-    height: 2rem;
+    width: 2rem; height: 2rem;
     background-color: transparent;
     margin-right: 0.5rem;
     border-radius: 6px;
     border: 2px solid hsl(var(--border));
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
     transition: all 0.3s ease, 0.2s border cubic-bezier(0.26, 0.62, 0.43, 1.06);
     cursor: pointer;
   }
-
   .checkbox::before {
     content: "";
     position: absolute;
-    top: 232%;
-    left: 50%;
+    top: 232%; left: 50%;
     transform: translate(-50%, -100%) scale(0.75);
     border-radius: 50% 20% / 30% 70%;
-    width: 115%;
-    height: 115%;
+    width: 115%; height: 115%;
     filter: blur(4px);
     background: hsl(var(--primary));
     z-index: 1;
     transition: transform 0.56s cubic-bezier(0.5, 0.26, 0.7, 1.8), top 0.38s ease, filter 0.48s ease;
   }
-
   .checkbox::after {
     content: "";
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 75%;
-    height: 75%;
+    width: 75%; height: 75%;
     clip-path: polygon(41% 52%, 26% 35%, 10% 51%, 37% 88%, 37% 88%, 37% 88%, 37% 88%, 91% 33%, 78% 18%);
     background: white;
-    z-index: 1;
-    opacity: 0;
+    z-index: 1; opacity: 0;
     transition: all 0.3s cubic-bezier(0.93, 0.17, 0.43, 1.07);
   }
-
   .checkbox-container:has(.checkbox input[type="checkbox"]:checked) .checkbox::before {
     top: 50%;
     transform: translate(-50%, -50%) scale(1);
     filter: blur(0px);
   }
-
   .checkbox-container:has(.checkbox input[type="checkbox"]:checked) .checkbox::after {
     opacity: 1;
     transform: translate(-50%, -50%) perspective(70px) scale(1);
     animation: checkmarkAnimation 0.5s ease-in-out forwards;
   }
-
-  .checkbox:has(input[type="checkbox"]:checked) {
-    border: 0px solid;
-  }
-
+  .checkbox:has(input[type="checkbox"]:checked) { border: 0px solid; }
   @keyframes checkmarkAnimation {
-    0% {
-      opacity: 0;
-      transform: perspective(70px) translate(10%, -20%) rotate(43deg) rotateY(100deg) scale(0);
-    }
-    50% {
-      opacity: 1;
-      transform: perspective(70px) translate(-57%, -42%) rotate(32deg) rotateY(55deg) scale(1.32);
-    }
-    100% {
-      opacity: 1;
-      transform: perspective(70px) translate(-50%, -50%) rotate(0deg) rotateY(0deg) scale(1);
-    }
+    0%   { opacity: 0; transform: perspective(70px) translate(10%, -20%) rotate(43deg) rotateY(100deg) scale(0); }
+    50%  { opacity: 1; transform: perspective(70px) translate(-57%, -42%) rotate(32deg) rotateY(55deg) scale(1.32); }
+    100% { opacity: 1; transform: perspective(70px) translate(-50%, -50%) rotate(0deg) rotateY(0deg) scale(1); }
   }
 
-  /* Floating Label Input */
+  /* ── Floating Label Input ── */
   .inputGroup {
-    font-family: 'Segoe UI', sans-serif;
-    margin: 1em 0 1em 0;
+    font-family: var(--font-body);
+    margin: 1em 0;
     position: relative;
     width: 100%;
   }
-
   .inputGroup input {
     font-size: 100%;
-    padding: 0.8em;
-    padding-left: 1em;
+    padding: 0.8em 1em;
     outline: none;
-    border: 2px solid hsl(var(--border));
+    border: 1.5px solid hsl(var(--border));
     background-color: hsl(var(--background));
-    border-radius: 20px;
+    border-radius: 12px;
     width: 100%;
     color: hsl(var(--foreground));
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
   }
-
   .inputGroup label {
     font-size: 100%;
     position: absolute;
-    left: 0;
-    top: 50%;
+    left: 0; top: 50%;
     transform: translateY(-50%);
     padding: 0.8em;
     margin-left: 0.5em;
     pointer-events: none;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     color: hsl(var(--muted-foreground));
+    font-family: var(--font-body);
   }
-
   .inputGroup :is(input:focus, input:valid) ~ label {
-    transform: translateY(-50%) scale(0.9);
+    transform: translateY(-50%) scale(0.85);
     top: 0;
-    margin: 0em;
-    margin-left: 1.3em;
-    padding: 0.4em;
+    margin: 0;
+    margin-left: 1em;
+    padding: 0.3em 0.5em;
     background-color: hsl(var(--card));
     color: hsl(var(--primary));
+    font-weight: 500;
   }
+  .inputGroup :is(input:focus, input:valid) { border-color: hsl(var(--primary)); }
+  .inputGroup input:focus { box-shadow: 0 0 0 3px hsl(var(--primary) / 0.12); }
 
-  .inputGroup :is(input:focus, input:valid) {
-    border-color: hsl(var(--primary));
-  }
-
-  .inputGroup input:focus {
-    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
-  }
-
-  /* Auth Form Design */
+  /* ── Auth Form ── */
   .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 3em 2.8em 2.1em 2.8em;
-    border: 2px dashed hsl(var(--primary));
-    border-radius: 15px;
+    gap: 8px;
+    padding: 2.5em 2.5em 2em;
+    border: 1.5px solid hsl(var(--border));
+    border-radius: 20px;
     background-color: hsl(var(--card));
-    box-shadow: 0 0 0 4px hsl(var(--card)), 2px 2px 4px 2px rgba(0, 0, 0, 0.5);
-    transition: .4s ease-in-out;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.06);
+    transition: box-shadow 0.3s ease;
   }
-
   .dark .auth-form {
-    box-shadow: 0 0 0 4px hsl(var(--card)), 2px 2px 8px 2px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 32px rgba(0,0,0,0.4);
   }
-
+  .auth-form:focus-within {
+    box-shadow: 0 8px 40px rgba(99,102,241,0.12);
+  }
   .auth-form .heading {
-    padding-left: 0.8em;
-    color: hsl(var(--primary));
-    background-color: transparent;
-    letter-spacing: .5em;
+    padding: 0;
+    color: hsl(var(--foreground));
     text-align: center;
-    padding-top: 1em;
-    padding-bottom: 2em;
+    padding-top: 0.25em;
+    padding-bottom: 1.25em;
     font-size: 1.5rem;
-    font-weight: bold;
+    font-weight: 800;
     font-family: var(--font-heading);
+    letter-spacing: -0.03em;
   }
-
   .auth-form .input {
     outline: none;
-    padding: 0.8em;
-    border: 1px solid hsl(var(--primary));
+    padding: 0.75em 1em;
+    border: 1.5px solid hsl(var(--border));
     color: hsl(var(--foreground));
     width: 100%;
     height: 3em;
     border-radius: 10px;
     background-color: hsl(var(--background));
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
   }
-
-  .auth-form .input::placeholder {
-    color: hsl(var(--muted-foreground));
-    text-align: center;
-  }
-
+  .auth-form .input::placeholder { color: hsl(var(--muted-foreground)); }
   .auth-form .input:focus {
     border-color: hsl(var(--primary));
-    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.2);
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.12);
   }
-
   .auth-form .btn {
     align-self: center;
-    margin-top: 2em;
+    margin-top: 1.5em;
     border-radius: 10px;
     outline: none;
     border: none;
     color: white;
     background-color: hsl(var(--primary));
-    font-weight: bold;
-    letter-spacing: 0.1em;
-    transition: .4s ease-in-out opacity, .1s ease-in-out;
-    padding: 1em 2em;
-    box-shadow: 0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.5);
+    font-weight: 600;
+    font-family: var(--font-body);
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+    padding: 0.85em 2.5em;
     cursor: pointer;
+    font-size: 0.9rem;
   }
+  .auth-form .btn:hover  { background-color: hsl(243 75% 52%); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+  .auth-form .btn:active { transform: translateY(0); box-shadow: none; }
+  .auth-form .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
 
-  .auth-form .btn:hover {
-    opacity: 0.8;
-  }
-
-  .auth-form .btn:active {
-    transform: translateX(0.1em) translateY(0.1em);
-    box-shadow: none;
-  }
-
-  .auth-form .btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  /* Gooey Button Design */
+  /* ── Gooey Buttons ── */
   .c-button {
-    font-weight: 700;
-    font-size: 16px;
+    font-weight: 600;
+    font-size: 15px;
     text-decoration: none;
-    padding: 0.9em 1.6em;
+    padding: 0.85em 1.6em;
     cursor: pointer;
     display: inline-block;
     vertical-align: middle;
     position: relative;
     z-index: 1;
+    font-family: var(--font-body);
   }
-
   .c-button--gooey {
     color: hsl(var(--primary));
     background-color: transparent;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    border: 4px solid hsl(var(--primary));
+    letter-spacing: 1.5px;
+    border: 2px solid hsl(var(--primary));
     position: relative;
-    transition: all 700ms ease;
+    transition: all 600ms ease;
     border-radius: 999px;
   }
-
   .c-button--gooey .c-button__blobs {
-    height: 100%;
-    filter: url(#goo);
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: -3px;
-    right: -1px;
-    z-index: -1;
-    border-radius: 20px;
+    height: 100%; filter: url(#goo); overflow: hidden;
+    position: absolute; top: 0; left: 0; bottom: -3px; right: -1px;
+    z-index: -1; border-radius: 20px;
   }
-
   .c-button--gooey .c-button__blobs div {
     background-color: hsl(var(--primary));
-    width: 34%;
-    height: 100%;
-    border-radius: 100%;
+    width: 34%; height: 100%; border-radius: 100%;
     position: absolute;
     transform: scale(1.4) translateY(125%) translateZ(0);
-    transition: all 700ms ease;
+    transition: all 600ms ease;
   }
+  .c-button--gooey .c-button__blobs div:nth-child(1) { left: -5%; }
+  .c-button--gooey .c-button__blobs div:nth-child(2) { left: 30%; transition-delay: 60ms; }
+  .c-button--gooey .c-button__blobs div:nth-child(3) { left: 66%; transition-delay: 25ms; }
+  .c-button--gooey:hover { color: #fff; }
+  .c-button--gooey:hover .c-button__blobs div { transform: scale(1.4) translateY(0) translateZ(0); }
 
-  .c-button--gooey .c-button__blobs div:nth-child(1) {
-    left: -5%;
-  }
-
-  .c-button--gooey .c-button__blobs div:nth-child(2) {
-    left: 30%;
-    transition-delay: 60ms;
-  }
-
-  .c-button--gooey .c-button__blobs div:nth-child(3) {
-    left: 66%;
-    transition-delay: 25ms;
-  }
-
-  .c-button--gooey:hover {
-    color: #fff;
-  }
-
-  .c-button--gooey:hover .c-button__blobs div {
-    transform: scale(1.4) translateY(0) translateZ(0);
-  }
-
-  /* Gooey Button Outline Variant */
   .c-button--gooey-outline {
     color: hsl(var(--foreground));
     background-color: transparent;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    border: 4px solid hsl(var(--border));
+    letter-spacing: 1.5px;
+    border: 2px solid hsl(var(--border));
     position: relative;
-    transition: all 700ms ease;
+    transition: all 600ms ease;
     border-radius: 999px;
   }
-
   .c-button--gooey-outline .c-button__blobs {
-    height: 100%;
-    filter: url(#goo);
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: -3px;
-    right: -1px;
-    z-index: -1;
-    border-radius: 20px;
+    height: 100%; filter: url(#goo); overflow: hidden;
+    position: absolute; top: 0; left: 0; bottom: -3px; right: -1px;
+    z-index: -1; border-radius: 20px;
   }
-
   .c-button--gooey-outline .c-button__blobs div {
     background-color: hsl(var(--muted));
-    width: 34%;
-    height: 100%;
-    border-radius: 100%;
+    width: 34%; height: 100%; border-radius: 100%;
     position: absolute;
     transform: scale(1.4) translateY(125%) translateZ(0);
-    transition: all 700ms ease;
+    transition: all 600ms ease;
   }
+  .c-button--gooey-outline .c-button__blobs div:nth-child(1) { left: -5%; }
+  .c-button--gooey-outline .c-button__blobs div:nth-child(2) { left: 30%; transition-delay: 60ms; }
+  .c-button--gooey-outline .c-button__blobs div:nth-child(3) { left: 66%; transition-delay: 25ms; }
+  .c-button--gooey-outline:hover { color: hsl(var(--foreground)); border-color: hsl(var(--primary)); }
+  .c-button--gooey-outline:hover .c-button__blobs div { transform: scale(1.4) translateY(0) translateZ(0); background-color: hsl(var(--primary) / 0.08); }
 
-  .c-button--gooey-outline .c-button__blobs div:nth-child(1) {
-    left: -5%;
-  }
-
-  .c-button--gooey-outline .c-button__blobs div:nth-child(2) {
-    left: 30%;
-    transition-delay: 60ms;
-  }
-
-  .c-button--gooey-outline .c-button__blobs div:nth-child(3) {
-    left: 66%;
-    transition-delay: 25ms;
-  }
-
-  .c-button--gooey-outline:hover {
-    color: hsl(var(--foreground));
-    border-color: hsl(var(--primary));
-  }
-
-  .c-button--gooey-outline:hover .c-button__blobs div {
-    transform: scale(1.4) translateY(0) translateZ(0);
-    background-color: hsl(var(--primary) / 0.1);
-  }
-
-  /* Gooey Button White Variant */
   .c-button--gooey-white {
     color: white;
     background-color: transparent;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    border: 4px solid white;
+    letter-spacing: 1.5px;
+    border: 2px solid white;
     position: relative;
-    transition: all 700ms ease;
+    transition: all 600ms ease;
     border-radius: 999px;
   }
-
   .c-button--gooey-white .c-button__blobs {
-    height: 100%;
-    filter: url(#goo);
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: -3px;
-    right: -1px;
-    z-index: -1;
-    border-radius: 20px;
+    height: 100%; filter: url(#goo); overflow: hidden;
+    position: absolute; top: 0; left: 0; bottom: -3px; right: -1px;
+    z-index: -1; border-radius: 20px;
   }
-
   .c-button--gooey-white .c-button__blobs div {
     background-color: white;
-    width: 34%;
-    height: 100%;
-    border-radius: 100%;
+    width: 34%; height: 100%; border-radius: 100%;
     position: absolute;
     transform: scale(1.4) translateY(125%) translateZ(0);
-    transition: all 700ms ease;
+    transition: all 600ms ease;
   }
-
-  .c-button--gooey-white .c-button__blobs div:nth-child(1) {
-    left: -5%;
-  }
-
-  .c-button--gooey-white .c-button__blobs div:nth-child(2) {
-    left: 30%;
-    transition-delay: 60ms;
-  }
-
-  .c-button--gooey-white .c-button__blobs div:nth-child(3) {
-    left: 66%;
-    transition-delay: 25ms;
-  }
-
-  .c-button--gooey-white:hover {
-    color: hsl(var(--primary));
-  }
-
-  .c-button--gooey-white:hover .c-button__blobs div {
-    transform: scale(1.4) translateY(0) translateZ(0);
-  }
+  .c-button--gooey-white .c-button__blobs div:nth-child(1) { left: -5%; }
+  .c-button--gooey-white .c-button__blobs div:nth-child(2) { left: 30%; transition-delay: 60ms; }
+  .c-button--gooey-white .c-button__blobs div:nth-child(3) { left: 66%; transition-delay: 25ms; }
+  .c-button--gooey-white:hover { color: hsl(var(--primary)); }
+  .c-button--gooey-white:hover .c-button__blobs div { transform: scale(1.4) translateY(0) translateZ(0); }
 }
 
-/* Notification Bell Animations */
+/* ── Bell & Dropdown Animations ── */
 @keyframes bell-shake {
   0%, 100% { transform: rotate(0deg); }
   15%       { transform: rotate(12deg); }
@@ -725,27 +499,16 @@
   60%       { transform: rotate(-6deg); }
   75%       { transform: rotate(4deg); }
 }
-
 @keyframes dropdown-in {
   from { opacity: 0; transform: translateY(-8px) scale(0.97); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
+.animate-bell-shake { animation: bell-shake 0.6s ease-in-out; }
+.animate-dropdown   { animation: dropdown-in 0.2s ease-out forwards; transform-origin: top right; }
 
-.animate-bell-shake {
-  animation: bell-shake 0.6s ease-in-out;
-}
-
-.animate-dropdown {
-  animation: dropdown-in 0.2s ease-out forwards;
-  transform-origin: top right;
-}
-
-/* Command Palette Animation */
+/* ── Command Palette ── */
 @keyframes palette-in {
   from { opacity: 0; transform: translateX(-50%) translateY(-12px) scale(0.96); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0)     scale(1); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
 }
-
-.animate-palette-in {
-  animation: palette-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+.animate-palette-in { animation: palette-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }

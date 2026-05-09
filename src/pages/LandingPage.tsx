@@ -46,7 +46,7 @@ const LandingPage = () => {
       </svg>
 
       {/* Navbar */}
-      <nav className="fixed top-4 left-0 right-0 z-50 flex justify-center px-6">
+      <nav className="sticky top-0 z-50 flex justify-center px-6 py-2 bg-transparent">
         <div className="w-full max-w-5xl flex items-center justify-between px-4 py-2 rounded-full bg-background/95 backdrop-blur-xl border border-border/50 shadow-lg">
 
           {/* Logo */}
@@ -103,108 +103,89 @@ const LandingPage = () => {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden pt-32 pb-20 md:pt-44 md:pb-32">
-        <div className="absolute inset-0 gradient-mesh opacity-40"></div>
-        
-        <div className="absolute inset-0 opacity-10">
-          <img src="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=1920&q=80" alt="" className="h-full w-full object-cover" />
-        </div>
-        
-        {/* Floating decorative elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 0.6, y: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="absolute top-20 left-10 md:left-20 w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-primary/20 backdrop-blur-sm flex items-center justify-center animate-float"
-          >
-            <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-primary" />
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 0.6, y: 0 }}
-            transition={{ duration: 1, delay: 0.7 }}
-            className="absolute top-32 right-10 md:right-24 w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-secondary/20 backdrop-blur-sm flex items-center justify-center animate-float"
-            style={{ animationDelay: '1s' }}
-          >
-            <Plane className="w-8 h-8 md:w-10 md:h-10 text-secondary" />
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 0.6, x: 0 }}
-            transition={{ duration: 1, delay: 0.9 }}
-            className="absolute bottom-32 left-16 md:left-32 w-14 h-14 md:w-16 md:h-16 rounded-xl bg-accent/20 backdrop-blur-sm flex items-center justify-center animate-float"
-            style={{ animationDelay: '2s' }}
-          >
-            <Calendar className="w-7 h-7 md:w-8 md:h-8 text-accent" />
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 0.6, x: 0 }}
-            transition={{ duration: 1, delay: 1.1 }}
-            className="absolute bottom-40 right-20 md:right-40 w-14 h-14 md:w-16 md:h-16 rounded-xl bg-primary/20 backdrop-blur-sm flex items-center justify-center animate-float"
-            style={{ animationDelay: '1.5s' }}
-          >
-            <BarChart3 className="w-7 h-7 md:w-8 md:h-8 text-primary" />
-          </motion.div>
+      {/* Hero — full screen image with text overlay */}
+      <div className="px-4 md:px-6 pt-3 pb-0">
+        <section className="relative w-full rounded-2xl overflow-hidden" style={{ height: 'calc(100vh - 80px)' }}>
 
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 0.5, scale: 1 }}
-            transition={{ duration: 1, delay: 1.3 }}
-            className="absolute top-1/2 left-1/4 w-12 h-12 rounded-full bg-secondary/20 backdrop-blur-sm flex items-center justify-center animate-pulse-soft"
-          >
-            <MapPin className="w-6 h-6 text-secondary" />
-          </motion.div>
-        </div>
+        {/* Full screen beach image */}
+        <img
+          src={heroBg}
+          alt="Beautiful beach at sunset"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
 
-        <div className="container mx-auto px-6 relative z-10">
-          <motion.div className="max-w-4xl mx-auto text-center" initial="hidden" animate="visible">
-            <motion.h1 variants={fadeUp} custom={0} className="text-5xl md:text-7xl lg:text-8xl font-bold font-heading heading-gradient leading-tight mb-6">
-              Plan Your Tasks.<br />Plan Your Trips.<br />Live Balanced.
-            </motion.h1>
-            <motion.p variants={fadeUp} custom={1} className="text-lg md:text-xl text-foreground/70 mb-10 max-w-2xl mx-auto leading-relaxed">
-              The all-in-one productivity platform that seamlessly combines daily task management with vacation planning.
-            </motion.p>
-            <motion.div variants={fadeUp} custom={2} className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to="/signup">
-                <Button className="rounded-full pl-2 pr-6 h-11 text-sm font-semibold flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-foreground/20">
+        {/* Layered overlays */}
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
+
+        {/* Content — centered vertically */}
+        <div className="absolute inset-0 flex items-center z-10">
+          <div className="container mx-auto px-8 md:px-16">
+            <motion.div className="max-w-2xl" initial="hidden" animate="visible">
+
+              {/* Badge */}
+              <motion.div variants={fadeUp} custom={0}
+                className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md text-white text-xs font-semibold px-4 py-2 rounded-full mb-5 border border-white/25"
+              >
+                <Plane className="h-3.5 w-3.5" />
+                All-in-one productivity + travel app
+              </motion.div>
+
+              {/* Heading */}
+              <motion.h1 variants={fadeUp} custom={1}
+                className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-white leading-[1.1] mb-5 drop-shadow-lg"
+              >
+                Plan Your Tasks.<br />
+                Plan Your Trips.<br />
+                <span className="text-sky-300">Live Balanced.</span>
+              </motion.h1>
+
+              {/* Subtext */}
+              <motion.p variants={fadeUp} custom={2}
+                className="text-sm md:text-base text-white/75 mb-7 leading-relaxed max-w-lg"
+              >
+                The all-in-one productivity platform that seamlessly combines daily task management with vacation planning.
+              </motion.p>
+
+              {/* Buttons */}
+              <motion.div variants={fadeUp} custom={3} className="flex flex-wrap gap-3 mb-8">
+                <Link to={user ? "/dashboard" : "/signup"}>
+                  <Button className="rounded-xl px-6 h-11 text-sm font-semibold bg-white text-primary hover:bg-white/90 shadow-lg flex items-center gap-2">
                     <Plane className="h-4 w-4" />
-                  </span>
-                  Get Started Free
-                </Button>
-              </Link>
-              <a href="#features">
-                <Button variant="outline" className="rounded-full pl-2 pr-6 h-11 text-sm font-semibold flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-muted">
-                    <ListTodo className="h-4 w-4 text-primary" />
-                  </span>
-                  Explore Features
-                </Button>
-              </a>
-            </motion.div>
-          </motion.div>
+                    {user ? "Go to Dashboard" : "Get Started Free"}
+                  </Button>
+                </Link>
+                <a href="#features">
+                  <Button className="rounded-xl px-6 h-11 text-sm font-semibold bg-white/10 backdrop-blur-md text-white border border-white/30 hover:bg-white/20 flex items-center gap-2">
+                    <ListTodo className="h-4 w-4" />
+                    Explore Features
+                  </Button>
+                </a>
+              </motion.div>
 
-          {/* Stats */}
-          <motion.div variants={fadeUp} custom={3} initial="hidden" animate="visible" className="mt-20 grid grid-cols-3 max-w-lg mx-auto gap-8">
-            {[{ num: "10K+", label: "Active Users" }, { num: "50K+", label: "Tasks Completed" }, { num: "2K+", label: "Trips Planned" }].map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-2xl md:text-3xl font-bold font-heading text-primary">{s.num}</div>
-                <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
-              </div>
-            ))}
-          </motion.div>
+              {/* Stats */}
+              <motion.div variants={fadeUp} custom={4} className="flex items-center gap-10 pt-6 border-t border-white/20">
+                {[
+                  { num: "10K+", label: "Active Users" },
+                  { num: "50K+", label: "Tasks Done" },
+                  { num: "2K+",  label: "Trips Planned" },
+                ].map((s) => (
+                  <div key={s.label}>
+                    <div className="text-xl md:text-2xl font-bold font-heading text-sky-300">{s.num}</div>
+                    <div className="text-xs text-white/55 mt-0.5">{s.label}</div>
+                  </div>
+                ))}
+              </motion.div>
+
+            </motion.div>
+          </div>
         </div>
-      </section>
+        </section>
+      </div>
 
       {/* Features */}
-      <section id="features" className="py-20 md:py-32 relative">
-        <div className="absolute inset-0 gradient-soft opacity-30"></div>
+      <section id="features" className="py-14 md:py-20 bg-muted/30 scroll-mt-20">
         <div className="container mx-auto px-6 relative z-10">
           <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-3xl md:text-5xl font-bold font-heading heading-gradient mb-4">Everything You Need</h2>
@@ -226,8 +207,7 @@ const LandingPage = () => {
       </section>
 
       {/* App Preview */}
-      <section className="py-20 md:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-background"></div>
+      <section className="py-14 md:py-20 bg-background">
         <div className="container mx-auto px-6 relative z-10">
           <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-3xl md:text-5xl font-bold font-heading heading-gradient mb-4">See It In Action</h2>
@@ -259,8 +239,7 @@ const LandingPage = () => {
       </section>
 
       {/* Testimonials */}
-      <section id="testimonials" className="py-20 md:py-32 relative">
-        <div className="absolute inset-0 gradient-soft opacity-20"></div>
+      <section id="testimonials" className="py-14 md:py-20 bg-muted/30 scroll-mt-20">
         <div className="container mx-auto px-6 relative z-10">
           <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-3xl md:text-5xl font-bold font-heading heading-gradient mb-4">Loved by Thousands</h2>
@@ -290,22 +269,26 @@ const LandingPage = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 gradient-mesh opacity-40"></div>
-        <div className="container mx-auto px-6 relative z-10">
+      <section className="py-14 md:py-20 bg-background">
+        <div className="container mx-auto px-6">
           <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-            className="max-w-3xl mx-auto text-center rounded-2xl gradient-hero p-12 md:p-16 shadow-hero border border-primary/20">
-            <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary-foreground mb-4">Ready to Get Started?</h2>
-            <p className="text-primary-foreground/80 mb-8 text-base">Join thousands of users who manage their tasks and trips in one place.</p>
-            <div className="flex justify-center">
-              <Link to="/signup">
-                <Button className="rounded-full pl-2 pr-6 h-11 text-sm font-semibold flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-foreground/20">
-                    <Plane className="h-4 w-4" />
-                  </span>
-                  Start Free Today
-                </Button>
-              </Link>
+            className="max-w-3xl mx-auto text-center rounded-2xl overflow-hidden relative border border-primary/20">
+            {/* Beach image background */}
+            <img src={heroBg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/55" />
+            {/* Content */}
+            <div className="relative z-10 p-12 md:p-16">
+              <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mb-4">Ready to Get Started?</h2>
+              <p className="text-white/80 mb-8 text-base">Join thousands of users who manage their tasks and trips in one place.</p>
+              <div className="flex justify-center">
+                <Link to={user ? "/dashboard" : "/signup"}>
+                  <button className="c-button c-button--gooey-white">
+                    {user ? "Go to Dashboard" : "Start Free Today"}
+                    <div className="c-button__blobs"><div /><div /><div /></div>
+                  </button>
+                </Link>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -316,7 +299,7 @@ const LandingPage = () => {
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-hero">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                 <Plane className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="font-bold font-heading text-foreground">Holiday Tasker</span>
