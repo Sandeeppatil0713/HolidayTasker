@@ -14,9 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
-        body: ['Inter', 'system-ui', 'sans-serif'],
-        nav: ['Inter', 'system-ui', 'sans-serif'],
+        heading: ['Archivo Black', 'system-ui', 'sans-serif'],
+        body: ['Archivo Black', 'system-ui', 'sans-serif'],
+        nav: ['Archivo Black', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

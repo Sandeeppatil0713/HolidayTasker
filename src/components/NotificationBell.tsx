@@ -12,15 +12,8 @@ interface Notification {
   read: boolean;
 }
 
-interface Task {
-  id: string;
-  title: string;
-  due_date: string | null;
-  done: boolean;
-}
-
 // ── Task-derived notifications ──────────────────────────────────────────────
-function buildTaskNotifications(tasks: Task[]): Notification[] {
+function buildTaskNotifications(tasks: any[]): Notification[] {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const notifications: Notification[] = [];
@@ -81,28 +74,28 @@ function loadReadIds(): Set<string> {
   try {
     const raw = localStorage.getItem(READ_STORAGE_KEY);
     if (raw) return new Set(JSON.parse(raw));
-  } catch (_e) { /* ignore */ }
+  } catch {}
   return new Set();
 }
 
 function persistReadIds(ids: Set<string>) {
   try {
     localStorage.setItem(READ_STORAGE_KEY, JSON.stringify([...ids]));
-  } catch (_e) { /* ignore */ }
+  } catch {}
 }
 
 function loadClearedIds(): Set<string> {
   try {
     const raw = localStorage.getItem(CLEARED_STORAGE_KEY);
     if (raw) return new Set(JSON.parse(raw));
-  } catch (_e) { /* ignore */ }
+  } catch {}
   return new Set();
 }
 
 function persistClearedIds(ids: Set<string>) {
   try {
     localStorage.setItem(CLEARED_STORAGE_KEY, JSON.stringify([...ids]));
-  } catch (_e) { /* ignore */ }
+  } catch {}
 }
 
 export function NotificationBell() {
