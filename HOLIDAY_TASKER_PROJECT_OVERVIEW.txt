@@ -1,0 +1,619 @@
+================================================================================
+                        HOLIDAY TASKER — PROJECT OVERVIEW
+================================================================================
+
+Project Name   : Holiday Tasker
+Version        : 0.0.0
+Type           : Full-Stack Web Application
+Build Tool     : Vite + React + TypeScript
+
+================================================================================
+TECH STACK
+================================================================================
+
+Frontend
+--------
+- React 18.3
+- TypeScript 5.8
+- Vite 5.4
+- Tailwind CSS 3.4
+- Framer Motion 12 (animations)
+- Shadcn UI + Radix UI (component library)
+- Lucide React (icons)
+- Recharts (charts/analytics)
+
+Backend / Database
+------------------
+- Supabase (PostgreSQL + Auth + Storage + Realtime)
+- Supabase Edge Functions (Deno runtime)
+- Row Level Security (RLS) on all tables
+
+State Management
+----------------
+- React Context API (Auth, Theme, Favourites, Maintenance)
+- TanStack React Query v5 (server state)
+
+Routing
+-------
+- React Router DOM v6
+
+Forms & Validation
+------------------
+- React Hook Form v7
+- Zod v3
+- @hookform/resolvers
+
+Internationalisation
+--------------------
+- i18next + react-i18next
+- Languages: English, Spanish, French, German, Hindi
+
+Email
+-----
+- EmailJS (@emailjs/browser)
+
+Maps & Places
+-------------
+- Google Places API (Autocomplete + Nearby Search)
+
+Notifications
+-------------
+- Sonner (toast notifications)
+- Supabase Realtime (live updates)
+
+================================================================================
+FOLDER STRUCTURE
+================================================================================
+
+holiday-hub/
+├── public/
+│   ├── favicon.ico
+│   ├── placeholder.svg
+│   └── robots.txt
+├── src/
+│   ├── assets/
+│   │   └── hero-bg.jpg
+│   ├── components/
+│   │   ├── ui/                        ← 40+ Shadcn UI components
+│   │   ├── AdminLayout.tsx            ← Admin panel sidebar + header
+│   │   ├── AdminRoute.tsx             ← Admin-only route guard
+│   │   ├── CommandPalette.tsx         ← Cmd+K search palette
+│   │   ├── DashboardLayout.tsx        ← User dashboard sidebar + header
+│   │   ├── MaintenanceGate.tsx        ← Blocks users during maintenance
+│   │   ├── NavLink.tsx                ← Active-aware nav link wrapper
+│   │   ├── NotificationBell.tsx       ← Real-time notification dropdown
+│   │   ├── ProtectedRoute.tsx         ← Auth-required route guard
+│   │   └── ThemeToggle.tsx            ← Light/dark mode button
+│   ├── contexts/
+│   │   ├── AuthContext.tsx            ← Auth state, signIn/signUp/signOut/deleteAccount
+│   │   ├── FavouritesContext.tsx      ← Saved vacation places (in-memory)
+│   │   ├── MaintenanceContext.tsx     ← Realtime maintenance + force signout
+│   │   └── ThemeContext.tsx           ← Light/dark theme with localStorage
+│   ├── hooks/
+│   │   ├── use-mobile.tsx             ← Responsive breakpoint detection
+│   │   ├── use-toast.ts               ← Toast hook
+│   │   └── useGooglePlaces.ts         ← Google Places Autocomplete + Nearby Search
+│   ├── lib/
+│   │   ├── i18n.ts                    ← i18next config + all translations
+│   │   ├── supabase.ts                ← Supabase client initialisation
+│   │   └── utils.ts                   ← cn() utility (clsx + tailwind-merge)
+│   ├── pages/
+│   │   ├── admin/
+│   │   │   ├── AdminAnalytics.tsx     ← Platform-wide task analytics
+│   │   │   ├── AdminDashboard.tsx     ← Admin home
+│   │   │   ├── AdminFeedback.tsx      ← Support/feedback tickets
+│   │   │   ├── AdminNotifications.tsx ← Broadcast announcements
+│   │   │   ├── AdminProfile.tsx       ← Admin profile page
+│   │   │   ├── AdminSettings.tsx      ← Global app settings
+│   │   │   └── AdminUsers.tsx         ← User management (CRUD)
+│   │   ├── AnalyticsPage.tsx          ← User task analytics + charts
+│   │   ├── CalendarPage.tsx           ← Unified task + trip calendar
+│   │   ├── DashboardHome.tsx          ← Dashboard landing
+│   │   ├── FavouritePlacesPage.tsx    ← Saved favourite places
+│   │   ├── ForgotPasswordPage.tsx     ← Password reset request
+│   │   ├── Index.tsx                  ← Root redirect
+│   │   ├── LandingPage.tsx            ← Public marketing page
+│   │   ├── LoginPage.tsx              ← Sign in
+│   │   ├── NotFound.tsx               ← 404 page
+│   │   ├── ProfilePage.tsx            ← User profile (edit + avatar)
+│   │   ├── ResetPasswordPage.tsx      ← New password after reset link
+│   │   ├── SettingsPage.tsx           ← User preferences + notifications
+│   │   ├── SignUpPage.tsx             ← Create account
+│   │   ├── SmartSearchPage.tsx        ← AI-powered search
+│   │   ├── TasksPage.tsx              ← Task management
+│   │   └── VacationsPage.tsx          ← Vacation planner + Google Places
+│   ├── services/
+│   │   ├── notificationService.ts     ← EmailJS email sending
+│   │   ├── profileService.ts          ← Profile DB + avatar storage
+│   │   └── tasksService.ts            ← Tasks CRUD
+│   ├── test/
+│   │   ├── example.test.ts
+│   │   └── setup.ts
+│   ├── App.css
+│   ├── App.tsx                        ← Root component + all routes
+│   ├── index.css                      ← Global styles + Tailwind
+│   ├── main.tsx                       ← Entry point + EmailJS init
+│   └── vite-env.d.ts
+├── supabase/
+│   └── functions/
+│       └── send-notification/
+│           └── index.ts               ← Edge function (Resend email)
+├── .env                               ← Environment variables
+├── components.json                    ← Shadcn UI config
+├── DATABASE_SETUP.md                  ← SQL setup instructions
+├── package.json
+├── tailwind.config.ts
+├── tsconfig.json
+└── vite.config.ts
+
+================================================================================
+FEATURES
+================================================================================
+
+USER FEATURES
+-------------
+1. Task Management
+   - Create tasks with title, category, priority, start date, due date
+   - Toggle complete/incomplete with celebration animation
+   - Edit tasks inline via modal dialog
+   - Delete tasks
+   - Filter by category (All, Work, Personal, Travel, Urgent)
+   - Progress bar showing daily completion %
+
+2. Vacation Planner
+   - Search any city/region using Google Places Autocomplete
+   - View nearby tourist attractions, hotels, restaurants
+   - Star ratings, open/closed status, price levels
+   - Save places to favourites (heart button)
+   - Static trip itinerary planner
+   - Curated destination cards (Bali, Kyoto, Santorini, etc.)
+
+3. Calendar
+   - Unified view of tasks and trip dates
+
+4. Analytics Dashboard
+   - Summary cards: Total, Completed, Pending, Overdue, Productivity %
+   - Weekly bar chart (completed vs pending per day)
+   - Category pie chart (Work, Personal, Travel, Urgent)
+   - Priority pie chart (High, Medium, Low)
+   - 7-day completion rate trend line chart
+   - Recent tasks overview table
+
+5. Favourite Places
+   - View all saved places
+   - Remove from favourites
+
+6. Smart Search
+   - Search across tasks and places
+
+7. Settings
+   - Theme toggle (Light / Dark)
+   - Language switcher (EN, ES, FR, DE, HI) — persisted to localStorage
+   - Location access (browser geolocation + reverse geocode via Nominatim)
+   - Notification toggles (All, Task Reminders, Vacation Alerts, Email Digest)
+   - "Send now" buttons for manual email triggers
+   - Reset all settings
+   - Clear saved data (deletes all tasks from DB + clears localStorage)
+   - Delete account (requires typing "DELETE" to confirm)
+
+8. Profile
+   - Edit full name, phone, location, bio
+   - Upload / remove profile photo (Supabase Storage)
+   - View account info (member since, last login)
+   - Task summary stats
+   - Sign out
+
+9. Notifications (Bell)
+   - Real-time notification dropdown
+   - Task due date alerts (overdue, due today, due tomorrow)
+   - Admin announcements
+   - Mark all read / mark one read
+   - Clear all notifications
+
+10. Authentication
+    - Sign up (email + password, @gmail.com only enforced)
+    - Sign in
+    - Forgot password (Supabase sends reset email)
+    - Reset password (via email link)
+    - Auto-redirect admin users to /admin
+
+ADMIN FEATURES
+--------------
+1. User Management (/admin/users)
+   - View all registered users with task counts
+   - Add new users (creates Supabase auth account)
+   - Edit user name and role
+   - Delete user profile
+   - Search by name or email
+
+2. Analytics (/admin/analytics)
+   - Platform-wide task stats (all users combined)
+   - Weekly completion bar chart
+   - Category breakdown pie chart
+   - Vacation/Travel tasks section with completion %
+   - Realtime updates via Supabase channel
+
+3. Notifications (/admin/notifications)
+   - Compose announcements (title, message, type, target)
+   - Types: Info, Warning, Success, Alert
+   - Target: All Users / Admins Only
+   - Sent announcements history with delete
+   - Realtime live indicator
+
+4. Settings (/admin/settings)
+   - Maintenance Mode toggle (blocks all regular users instantly via realtime)
+   - Allow New Signups toggle
+   - Max Tasks Per User limit
+   - Email / Push notification toggles
+   - Force Sign Out All Users (writes force_signout flag → all sessions sign out via realtime)
+   - Persisted to app_settings table in Supabase
+
+5. Profile (/admin/profile)
+   - Admin profile management
+
+================================================================================
+DATABASE SCHEMA (Supabase / PostgreSQL)
+================================================================================
+
+TABLE: tasks
+------------
+id           uuid        PRIMARY KEY (auto-generated)
+user_id      uuid        REFERENCES auth.users(id) ON DELETE CASCADE
+title        text        NOT NULL
+done         boolean     DEFAULT false
+category     text        DEFAULT 'Work'   -- Work | Personal | Travel | Urgent
+priority     text        DEFAULT 'Medium' -- Low | Medium | High
+start_date   date        NULLABLE
+due_date     date        NULLABLE
+completed_at timestamptz NULLABLE
+created_at   timestamptz DEFAULT now()
+
+RLS: Users can only access their own rows (auth.uid() = user_id)
+
+TABLE: profiles
+---------------
+id           uuid        PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE
+username     text        NULLABLE
+email        text        NULLABLE
+phone        text        NULLABLE
+location     text        NULLABLE
+avatar_url   text        NULLABLE
+bio          text        NULLABLE
+role         text        DEFAULT 'user'  -- user | admin
+updated_at   timestamptz DEFAULT now()
+
+RLS: Users can only access their own row (auth.uid() = id)
+Trigger: handle_new_user() auto-creates profile row on signup
+
+TABLE: announcements
+--------------------
+id           uuid        PRIMARY KEY (auto-generated)
+title        text        NOT NULL
+body         text        NOT NULL
+type         text        -- info | warning | success | alert
+target       text        -- all | admins
+created_at   timestamptz DEFAULT now()
+
+RLS: Public read, authenticated write
+
+TABLE: app_settings
+-------------------
+key          text        PRIMARY KEY
+value        text        NOT NULL
+updated_at   timestamptz DEFAULT now()
+
+Default rows:
+  maintenance_mode     = 'false'
+  email_notifications  = 'true'
+  push_notifications   = 'false'
+  max_tasks_per_user   = '100'
+  allow_signups        = 'true'
+  force_signout        = 'false'
+
+RLS: Public read, authenticated write
+
+STORAGE BUCKET: avatars
+-----------------------
+- Public bucket
+- Path: {userId}/avatar.{ext}
+- Policies: authenticated users can upload/update their own folder
+
+SQL FUNCTIONS
+-------------
+delete_user()
+  - Security definer function
+  - Deletes auth.users row for the calling user (auth.uid())
+  - Called via supabase.rpc('delete_user')
+
+handle_new_user()
+  - Trigger function on auth.users INSERT
+  - Auto-creates profiles row with username from metadata
+  - Has exception handling to not block signup on failure
+
+================================================================================
+ROUTES
+================================================================================
+
+PUBLIC ROUTES
+-------------
+/                    → LandingPage
+/login               → LoginPage
+/signup              → SignUpPage
+/forgot-password     → ForgotPasswordPage
+/reset-password      → ResetPasswordPage
+
+PROTECTED ROUTES (requires auth + MaintenanceGate)
+---------------------------------------------------
+/dashboard           → TasksPage (default)
+/dashboard/tasks     → TasksPage
+/dashboard/vacations → VacationsPage
+/dashboard/analytics → AnalyticsPage
+/dashboard/search    → SmartSearchPage
+/dashboard/favourites→ FavouritePlacesPage
+/dashboard/calendar  → CalendarPage
+/dashboard/settings  → SettingsPage
+/dashboard/profile   → ProfilePage
+
+ADMIN ROUTES (requires isAdmin)
+--------------------------------
+/admin               → redirect to /admin/users
+/admin/users         → AdminUsers
+/admin/analytics     → AdminAnalytics
+/admin/notifications → AdminNotifications
+/admin/settings      → AdminSettings
+/admin/profile       → AdminProfile
+
+================================================================================
+SERVICES & KEY FUNCTIONS
+================================================================================
+
+tasksService (src/services/tasksService.ts)
+-------------------------------------------
+fetchTasks(userId)          → SELECT all tasks for user, ordered by created_at DESC
+createTask(userId, task)    → INSERT new task row
+toggleTask(id, done)        → UPDATE done + completed_at
+deleteTask(id)              → DELETE task by id
+updateTask(id, updates)     → UPDATE title/category/priority/dates
+clearAllTasks(userId)       → DELETE all tasks for user
+
+profileService (src/services/profileService.ts)
+------------------------------------------------
+getProfile(userId)          → SELECT profile row
+upsertProfile(userId, data) → INSERT or UPDATE profile (onConflict: id)
+uploadAvatar(userId, file)  → Upload to Supabase Storage avatars bucket
+deleteAvatar(userId, url)   → Remove from storage + clear avatar_url in DB
+
+notificationService (src/services/notificationService.ts)
+----------------------------------------------------------
+loadNotifPrefs()            → Read notification prefs from localStorage
+saveNotifPrefs(prefs)       → Write notification prefs to localStorage
+sendTaskReminderEmail()     → Filter tasks due today/tomorrow → send via EmailJS
+sendVacationAlertEmail()    → Send trip summary via EmailJS
+sendEmailDigest()           → Send pending tasks + trips digest via EmailJS
+sendAnnouncementEmails()    → Broadcast announcement to list of users via EmailJS
+
+useGooglePlaces (src/hooks/useGooglePlaces.ts)
+----------------------------------------------
+search(query)               → Google Places Autocomplete suggestions
+fetchNearby(placeId)        → Get nearby attractions, hotels, restaurants
+clear()                     → Clear autocomplete suggestions
+clearNearby()               → Clear nearby results
+
+================================================================================
+CONTEXTS
+================================================================================
+
+AuthContext
+-----------
+user          → Supabase User object
+session       → Supabase Session
+loading       → Boolean
+isAdmin       → Boolean (checks email or user_metadata.role)
+signIn()      → supabase.auth.signInWithPassword
+signUp()      → supabase.auth.signUp
+signOut()     → supabase.auth.signOut
+deleteAccount()→ supabase.rpc('delete_user') + clear all local storage
+
+ThemeContext
+------------
+theme         → 'light' | 'dark'
+setTheme()    → Update + persist to localStorage
+toggleTheme() → Toggle between light/dark
+
+FavouritesContext
+-----------------
+favourites    → FavouritePlace[]
+addFavourite()    → Add place to list
+removeFavourite() → Remove by placeId
+isFavourite()     → Check if place is saved
+
+MaintenanceContext
+------------------
+maintenance   → Boolean (from app_settings table)
+checked       → Boolean (initial fetch complete)
+Realtime:     → Watches app_settings for maintenance_mode + force_signout changes
+
+================================================================================
+COMPONENTS
+================================================================================
+
+DashboardLayout
+---------------
+- Collapsible sidebar with nav items (translated via i18n)
+- Shows user avatar (from auth metadata) or initials
+- Header with welcome message, notification bell, theme toggle, sign out
+- Responsive mobile support
+
+AdminLayout
+-----------
+- Fixed sidebar with admin nav items
+- Admin badge in header
+- Sign out button
+
+NotificationBell
+----------------
+- Fetches tasks (overdue, due today, due tomorrow) + announcements
+- Realtime subscription for new announcements
+- Unread count badge with shake animation
+- Mark all read / mark one read / clear all
+- Portal-rendered dropdown
+
+MaintenanceGate
+---------------
+- Reads maintenance state from MaintenanceContext
+- Admins always pass through
+- Shows maintenance screen with "Back to Home" + "Sign Out" buttons
+- Instant update via realtime (no page refresh needed)
+
+CommandPalette
+--------------
+- Cmd+K / Ctrl+K keyboard shortcut
+- Search across app navigation
+
+================================================================================
+ENVIRONMENT VARIABLES
+================================================================================
+
+VITE_SUPABASE_URL          = https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY     = your-anon-key
+VITE_GOOGLE_PLACES_API_KEY = your-google-api-key
+VITE_EMAILJS_SERVICE_ID    = service_xxxxxxx
+VITE_EMAILJS_TEMPLATE_ID   = template_xxxxxxx
+VITE_EMAILJS_PUBLIC_KEY    = your-public-key
+
+================================================================================
+SCRIPTS
+================================================================================
+
+npm run dev          → Start development server (Vite)
+npm run build        → Production build
+npm run build:dev    → Development build
+npm run lint         → ESLint
+npm run preview      → Preview production build
+npm run test         → Run tests (Vitest, single run)
+npm run test:watch   → Run tests in watch mode
+
+================================================================================
+KEY DEPENDENCIES
+================================================================================
+
+Production
+----------
+@supabase/supabase-js     ^2.98.0   Backend client
+@tanstack/react-query     ^5.83.0   Server state management
+react-router-dom          ^6.30.1   Client-side routing
+framer-motion             ^12.34.3  Animations
+recharts                  ^2.15.4   Charts
+i18next                   ^26.0.6   Internationalisation
+react-i18next             ^17.0.4   React i18n bindings
+@emailjs/browser          ^4.4.1    Email sending
+lucide-react              ^0.462.0  Icons
+date-fns                  ^3.6.0    Date utilities
+react-hook-form           ^7.61.1   Form management
+zod                       ^3.25.76  Schema validation
+tailwind-merge            ^2.6.0    CSS class merging
+clsx                      ^2.1.1    Conditional classes
+
+Dev
+---
+vite                      ^5.4.19
+typescript                ^5.8.3
+tailwindcss               ^3.4.17
+vitest                    ^3.2.4
+@testing-library/react    ^16.0.0
+
+================================================================================
+ADMIN ACCESS
+================================================================================
+
+Admin is determined by:
+1. Email matches ADMIN_EMAILS list in AuthContext (default: admin@gmail.com)
+2. OR user_metadata.role === 'admin'
+
+Admin users:
+- Are never blocked by MaintenanceGate
+- Are redirected to /admin after login
+- Can access all /admin/* routes
+
+================================================================================
+INTERNATIONALISATION
+================================================================================
+
+Supported Languages:
+- en  → English (default)
+- es  → Spanish (Español)
+- fr  → French (Français)
+- de  → German (Deutsch)
+- hi  → Hindi (हिन्दी)
+
+Translated areas:
+- Sidebar navigation labels
+- Settings page (all labels, descriptions, buttons)
+- Dashboard header welcome message
+- Theme button labels
+
+Persistence: Selected language saved to localStorage key "language"
+
+================================================================================
+REALTIME FEATURES
+================================================================================
+
+1. Maintenance Mode
+   - Table: app_settings (key = maintenance_mode)
+   - All connected clients update instantly when admin toggles
+
+2. Force Sign Out
+   - Table: app_settings (key = force_signout)
+   - All connected clients sign out when value becomes 'true'
+
+3. Admin Analytics
+   - Table: tasks
+   - Dashboard refreshes on any task INSERT/UPDATE/DELETE
+
+4. Notification Bell
+   - Table: announcements
+   - New announcements appear instantly in all user bells
+
+5. Admin Notifications History
+   - Table: announcements
+   - INSERT/DELETE reflected in real time
+
+================================================================================
+PASSWORD RESET FLOW
+================================================================================
+
+1. User visits /forgot-password
+2. Enters email → supabase.auth.resetPasswordForEmail() called
+   - redirectTo: {origin}/reset-password
+3. Supabase sends email with magic link
+4. User clicks link → lands on /reset-password
+5. supabase.auth.getSession() verifies the token
+6. User enters new password → supabase.auth.updateUser({ password })
+7. Redirected to /login after 3 seconds
+
+Supabase config required:
+- Site URL: http://localhost:8080
+- Redirect URL: http://localhost:8080/reset-password
+
+================================================================================
+ACCOUNT DELETION FLOW
+================================================================================
+
+1. User clicks "Delete Account" in Settings
+2. Confirmation dialog appears
+3. User must type "DELETE" exactly to enable the confirm button
+4. On confirm:
+   a. supabase.rpc('delete_user') → deletes from auth.users (cascades to tasks, profiles)
+   b. supabase.auth.signOut()
+   c. localStorage.clear() + sessionStorage.clear()
+   d. Redirect to /signup
+
+SQL function required:
+  create or replace function delete_user()
+  returns void language sql security definer as $$
+    delete from auth.users where id = auth.uid();
+  $$;
+
+================================================================================
+END OF DOCUMENT
+================================================================================
