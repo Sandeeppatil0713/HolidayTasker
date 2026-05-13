@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   ListTodo, Globe2, Zap, BarChart2, CalendarDays,
   User, Plane, CheckCircle2, MapPin, TrendingUp,
-  Twitter, Github, Linkedin, Star, Calendar, BarChart3
+  Twitter, Github, Star, Calendar, BarChart3
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -313,7 +313,7 @@ const LandingPage = () => {
             {/* Animated Social Icons */}
             <ul className="flex items-center gap-3 list-none">
               <li className="relative group">
-                <a href="#" className="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary">
+                <a href="https://x.com/HolidayTasker" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary">
                   <Twitter className="h-5 w-5 text-foreground group-hover:text-white transition-colors" />
                   <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-primary text-white text-xs px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 group-hover:-top-12 transition-all duration-300 pointer-events-none whitespace-nowrap after:content-[''] after:absolute after:bottom-[-3px] after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-primary after:rotate-45">
                     Twitter
@@ -321,7 +321,7 @@ const LandingPage = () => {
                 </a>
               </li>
               <li className="relative group">
-                <a href="#" className="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 hover:bg-foreground">
+                <a href="https://github.com/Sandeeppatil0713/HolidayTasker" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 hover:bg-foreground">
                   <Github className="h-5 w-5 text-foreground group-hover:text-background transition-colors" />
                   <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-foreground text-background text-xs px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 group-hover:-top-12 transition-all duration-300 pointer-events-none whitespace-nowrap after:content-[''] after:absolute after:bottom-[-3px] after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-foreground after:rotate-45">
                     Github
@@ -329,10 +329,14 @@ const LandingPage = () => {
                 </a>
               </li>
               <li className="relative group">
-                <a href="#" className="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 hover:bg-accent">
-                  <Linkedin className="h-5 w-5 text-foreground group-hover:text-white transition-colors" />
-                  <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-accent text-white text-xs px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 group-hover:-top-12 transition-all duration-300 pointer-events-none whitespace-nowrap after:content-[''] after:absolute after:bottom-[-3px] after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-accent after:rotate-45">
-                    LinkedIn
+                <a href="https://www.instagram.com/holi.daytasker/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-12 h-12 bg-card rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 hover:bg-gradient-to-br hover:from-purple-500 hover:via-pink-500 hover:to-orange-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-foreground group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <circle cx="12" cy="12" r="4"/>
+                    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+                  </svg>
+                  <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-pink-500 text-white text-xs px-3 py-1 rounded-md opacity-0 group-hover:opacity-100 group-hover:-top-12 transition-all duration-300 pointer-events-none whitespace-nowrap after:content-[''] after:absolute after:bottom-[-3px] after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-pink-500 after:rotate-45">
+                    Instagram
                   </span>
                 </a>
               </li>
